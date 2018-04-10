@@ -1,0 +1,561 @@
+-->select the text using
+	vw  --visual mode select next word
+	vb --visual mode select previous word
+	press v  --visual mode
+	then
+	j   --select next line
+	k  -- selectprevious line
+	cntrl-u --select upto top
+	cntrl-d --select upto down
+	cntrl-v  --select text vertically
+	
+-> TO search for tab spaces in between two words
+   \(\S\)\t\+\(\S\)
+
+-->To delete text inside " or ( or { anything just give di and match symbol eg di(
+
+-->To find and replace text
+   :%s/text/replace text/
+-->to find a file in directory
+   find . -name 'filename'
+
+--> shift # to hilight the word throught out the file
+
+--> to open multiple files at a time 
+	:args path/*.dsl | vertical all
+
+-->(no)l to got perticluar row in a line ed 90(l) to goto 91 character in a particular line
+
+--> to insert same chars to multiple line verticall cntrl+v selecet lines then shift+i for insert mode then type text then press esc 
+Cut/copy and paste using visual selection
+	Press v to begin character-based visual selection (or upper case V to select whole lines, or Ctrl-v for a vertical block).
+	Move the cursor to the end of the text to be cut/copied. (While selecting text, you can perform searches and other advanced movement, a feature that sets vim apart from most other editors.)
+	Press d (as in "delete") to cut, or y (as in "yank", which I imagine meaning "yank so hard and fast that it leaves a copy behind") to copy.
+	Move the cursor to the desired paste location.
+	Press p to paste after the cursor, or P to paste before. 
+	
+--> To jump to a matching opening or closing parenthesis, square bracket or a curly brace: ([{}])
+--> Move to the 
+        e -->   end of a word. 
+        w -->   forward of a word. 
+       3w -->  forward three words. 
+        b -->  backward to the beginning of a word. 
+       3b --> backward three words. 
+        $ -->  end of the line. 
+        0 -->  beginning of the line. 
+        ^ -->  first non-blank character of the line. 
+        ) -->  jump forward one sentence. 
+       (  -->  Jump backward one sentence. 
+       }  -->  Jump forward one paragraph. 
+       {  -->  Jump backward one paragraph. 
+       H  -->  Jump to the top of the screen. 
+       M  -->  Jump to the middle of the screen. 
+       L  -->  Jump to the bottom of the screen. 
+       G  -->  Jump to end of file. 
+      1G  -->  Jump to beginning of file (same as gg). 
+      50G -->  Jump to line 50. 
+      %   --> Jump to corresponding item, e.g. from an open brace to its matching closing brace. 
+      10<PageUp> or 10<CTRL-B>  --> Move 10 pages up. 
+      5<PageDown> or 5<CTRL-F>  --> Move 5 pages down. 
+     
+     'm  -->  jump to the beginning of the line of mark m. 
+     `m  -->  Jump to the cursor position of mark m. 
+     ''  -->  Return to the line where the cursor was before the latest jump.     (Two single quotes.) 
+     ``  -->  Return to the cursor position before the latest jump (undo the jump). 
+		    (Two back ticks. This is above the Tab key on some keyboards.) 
+
+--> to know the disk usage of a folder
+	 du -sh name
+-->To list numeric file permissions on Linux
+  stat -c “%a %n” * | sort 
+--> to get numbers in incrementa order
+	first insert starting number in every line
+	then select all the line numbers then press "shift" + ":"
+	then remove every thing in the command line and write "Inc" (:Inc)then enter
+	
+--> To Rename files with vim
+		enter :Ren and select direcotry
+				rename files
+			then again enter ":Ren" to save the renamed files
+			
+--> To highlight the search word in vim
+           :set hlsearch
+			
+--> To sort lines by length in a file
+  :%s/^/\=repeat('0', 8 - strlen(strlen(getline('.')))) . strlen(getline('.'))/ | sort | %s/^\d\{8\}// 
+  
+	Note the double use of strlen() which is needed to prepends the line
+	length with the necessary number of zeroes to make it 8 digits wide. 
+	
+	To sort numbers
+	:sort n
+	
+--> To save files with sudo permission
+	:e filenae --> open file made the changes
+	:w !sudo tee % --> asks for sudo user password then enter
+	
+	
+--> Add break point at malloc
+    b __libc_malloc
+
+---> To delete line which contails(which doesn't contains) a pattern
+
+	For example, to delete all lines containing "profile" (remove the /d to show the lines that the command will delete):
+		:g/profile/d
+	More complex patterns can be used, such as deleting all lines that are empty or that contain only whitespace:
+		:g/^\s*$/d
+	To delete all lines that do not contain a pattern, use g!, like this command to delete all lines that are not comment lines in a Vim script:
+		:g!/^\s*"/d
+	Note that g! is equivalent to v, so you could also do the above with:
+		:v/^\s*"/d
+	The next example shows use of \| ("or") to delete all lines except those that contain "error" or "warn" or "fail" (:help pattern):
+		:v/error\|warn\|fail/d
+vim path
+C:\Program Files\Vim\vim73\plugin
+  
+--> To count no line between two markers
+	:echo line("'b")-line("'a")
+
+--> Browse through tags or ctags
+		press g then ctrl+]    --> give tags list
+		
+	To create tags "ctags path" eg: ctags */*/* create tags for those directries recursively
+	find -name '*.c' -exec ctags {} +
+	(or)
+	find . -name "*.[ch]" -print | xargs ctags -a  /* working fine */
+	set tags=/projects/magnum/praveenb/storage/NPB3.3.1/NPB3.3-SER/tags
+	ctags -R
+
+
+--> To run a command on all the lines of a another command ouput
+cat file... | xargs -n1 command	
+grep -r "search_word" | xargs sed -i -e 's/search_word/replace_word/g'
+	
+sdk-base/linux/usr/rootfs.xlple/helinux/bin/
+
+tar xvzf file-1.0.tar.gz 
+cerberus
+
+--> to know the stack size of linux
+	ulimit -a
+	to set 
+	ulimit -s 32768   (set for 32MB)
+	
+--> to list files according to last date modified
+   ls -lt
+   ls -ltr
+   find -printf "%TY-%Tm-%Td %TT %p\n" | grep 2018-02-26
+
+--> to list all running process
+	ps aux
+   
+ --> gdb executable_file_name
+	r command_line_arguments (to run the program )
+	or b main (to set break points)
+	then r
+	step by step execution  s (step into)
+							n (next step)
+	b function name or filenmae:line_number (to set break pont)
+	c to continue upto break point
+	q for quit
+	bt (back tree display tree structure when error occureed)
+	p  to print the variable
+	
+ dot -Tjpg nfa_with_eps.dot -o ~/working_programs/tarns_nfa.jpg
+
+ 
+ GIT TIPS
+ 
+ git pull probelm
+	delete the HASH value in this file
+	vi .git/shallow
+	
+To show what revision and author last modified each line of a file:
+git blame filename
+
+git remote update --prune (to update git)
+
+git push origin local_branch:remote_branch
+git push origin broot_qaq/01:proposed/praveenb/rtc_driver_xlp2xx_qaq01
+git push origin gcc_492:proposed/praveenb/gcc_492
+
+git status . --untracked-files=no
+git add drivers/rtc/rtc-xlp.c
+git commit
+git log
+git rebase -i HEAD~2
+git show --name-only commit-id
+git show --name-only 065d88c6f487890ea2120b742907ee987289feaa
+git blame file (to check line by line authors)
+git diff HEAD (diff with new files, git add new file and take git diff)
+
+TO modify existing comment/commit (add chenges along with old changes)
+git commit --amend
+  First git add list-of-modified-files.
+  git commit --amend
+
+TO apply a commit from other branch do git cherry-pic
+git cherry-pick <commit-id>
+
+to apply patch:
+first check patch can be applied or not
+git apply --check <path_to_patch>
+git apply
+
+git commit only specific files:
+git commit <file-name1> <file-name2>
+
+and two ammend to 2nd previous commit
+made changees to files
+commit those changes in one/more commits
+do git rebase -i HEAD~2
+use oprions f or other options to merge changes to particular commit
+
+TO create a git tag:
+git tag -a <tag_name> -m "tag message/commit description"
+git show <tag_name>
+git push origin <tag_name>
+git push origin --tags      /* TO push all local tags in signle push */
+
+TO remove tags
+git push origin :tagname (OR) git push --delete origin tagname
+git tag --delete tagname /* TO delete local tag */
+	
+search across all the branches
+git for-each-ref --format='%(*refname)' | xargs git grep "search_word"
+
+sort branches by date of last commiit
+for branch in `git branch -a | grep mladhe`;do echo -e `git show --format="%ai %ar by %an" $branch  | head -n 1` \\t$branch; done | sort -r
+
+get the list of branches which contain the specified commit
+git branch -r --contains <commit>
+
+git command to checkout the particular commit-id
+git checkout -b <new-branch-name> <commit-id>
+
+Before do git commit commit search for these with vim
+1. \s\+\n             (space and end of line trailing spaces)
+2. \/\*\(\S\)         (comment and word without space)
+3. \(\S\)\s\s\+\(\S\) (multiple spaces between words)
+4. \(\S\)\t\+\(\S\)   (tab spaces between words)
+5 \/\*\s\(\S\)\+\n  (check for wrong mutliline comments)
+6 \/\*\ \([^*]\)\+\n  (check for wrong mutliline comments)
+
+==============================================================
+TO siwtch between buffers windows and tabs:
+----------------------------------------
+To go to particular buffer in vim:
+:buffers or :ls /* to get list of buffers */
+<buffer no> ctrl + ^
+or :buf <buffer no>
+---------------------------------------
+To switch tabs in vim:
+<tab no> gt
+--------------------------------------
+TO switch windows in screen command
+ctrl + a then window number
+or ctrl + a + '
+or ctrl + a + "
+--------------------------------------
+TO switch between the vim vietical or horizonatl split
+ctrl +w ->
+ctrl + w <-
+to split the screen virtically ctrl + w + v
+or run this command :vsp
+--------------------------------------------------------
+
+:scriptnames list all the .vim files that Vim loaded for you, including your .vimrc file.
+
+grep excluding binary files
+--------------------------------------------------------
+grep -I string
+
+p4 steps:
+----------------------------------------------------
+login:
+p4 login
+to get p4 client info
+  p4 client
+to create a new client
+  p4 <client-name> client
+to use specific client
+  p4 -c <client-name> <p4-command>
+  or 
+  p4 set P4CLIENT=client1
+  p4 sync
+  
+
+to revert all unchanged files
+	p4 revert -a
+to revert all files
+	p4 revert //...
+	
+To store the diff and apply patch
+-----------------------------------------------------------
+p4 diff -du > diff.txt
+patch < diff.txt (patch -p (no of '\' es up to current directory) < diff.txt)
+eg: current directory L7
+//depot/trunk/L7/verifier/file.txt (/1/2/3/4 4th is L7)
+current direcory location is 4 so patch -p 4 < diff.txt
+
+patch -p 1 --dry-run < patch_file
+It will not apply the patch and check for patch errors.
+
+p4 sync to particular version
+p4 sync //depot/...@126
+
+To cpy or delete no of line without knowing number of line 
+-----------------------------------------------------------------------
+    Type mk to mark this spot as k.
+    Go to the end of the section you want to yank using whatever movement commands you like.
+    Type: y'k (<y-yank>, <single quote-go to mark>, k) To yank from the mark to the current location.
+    You can paste those lines wherever you want with p 
+
+Similarly, d'k will cut/delete the lines from the current location to the mark. 
+
+TO get xterm from bsub
+------------------------------------------------------------------------
+set DISPLAY variable "export DISPLAY="cx86-ban-06:21.0"
+	to get the ip address (21.0)
+		firstt open a new terminal run echo $DISPLAY (in tch shell it self)
+then give bsub -Ip xterm
+then it will open a terminal with new sheel
+
+To start a gdb debugging session in emacs:
+-----------------------------------------------------------------------
+
+¨      Start emacs without specifying a file
+
+o       Unix Prompt >emacs
+
+¨      Issue the command to execute a program on the emacs command line
+
+o       ESC-x  (then hit return)
+
+¨      Start gdb
+
+o       gdb (it will follow the M-x, which remains on the emacs command line)
+
+¨      You will then be prompted by the phrase run like this? Add the file to debug (or use the file command after gdb starts)
+
+The gdb environment will appear inside the single emacs window.
+to kill the emacs press (Esc then CNTRL+x) type kill-emacs (or) ctrl+x ctrl+c
+
+tr command
+echo "abbbbcddd" | tr -s bd
+
+sed
+echo "ab:cd:ef" | sed -e 's,:,,g'
+
+indent
+-----------------------------------------------------------
+https://www.gnu.org/software/indent/manual/html_node/indent_4.html
+for linux-kernel and driver
+indent 	-nbad -bap -nbc -bbo -hnl -br -brs -c33 -cd33 -ncdb -ce -ci4 -cli0 -d0 -di1 -nfc1 -i8 -ip0 -l80 -lp -npcs -nprs -npsl -sai -saf -saw -ncs -nsc -sob -nfca -cp33 -ss -ts8 -il1 
+
+To write standard output to file
+----------------------------------------------------------------------------------
+cmd > file.txt 2>&1
+{ time ./seq-csr/seq-csr -s 10 ; } > output/seq_csr_s_10.txt 2>&1
+
+mips64-nlm-linux-objcopy --set-start=`mips64-nlm-linux-readelf -h vmlinux | awk '/Entry point/ {sub("ffffffffc", "ffffffff8", $4); print $4}'` vmlinux
+
+nc copy commands:
+---------------------------------------------------------------------------------------
+1.	Assign IP address under initramfs (udhcpc –i ethX) and note down the IP_ADDR.
+2.	nc –l –p 8888 >u-boot.bin
+nc -l -p 8888 > mmc_log_e2.bin
+
+On x86, execute the following commands:
+
+cat  /sys/devices/platform/xlpmmc/mmclogdata | nc 10.131.60.158 8888
+
+#TO change default shell on ssh login
+sudo chsh <username> -s /bin/bash
+
+# to clear the screem after closing the vim
+export TERM=xterm on bash
+
+# Enable mouse scrolling and scroll bar history scrolling
+# To enable scrolling in terminal
+Add this to your ~/.screenrc
+termcapinfo xterm* ti@:te@
+Also do this 
+Terminator preferences -> Profiles Tab -> Scrolling [sub]tab -> Uncheck 'Scroll on output' option.
+
+To check the Hardware details using linux command
+ inxi -Fx
+ 
+To open all buffers in vim tabs
+:bufdo tab split
+
+to highlight the search word in vim
+:set hlsearch
+ 
+to clean the cache
+echo 3 > /proc/sys/vm/drop_caches
+
+screen commands
+===============================
+start a new screen
+--> screen
+to detach from screen
+--> "Ctrl-A” and “d“
+to list the screens
+screen -ls
+re-ttach screen
+screen -r screen_id
+
+--> to split the screen terminal
+    To split vertically: ctrla then |.
+    To split horizontally: ctrla then S (uppercase one).
+    To unsplit: ctrla then Q (uppercase one).
+    To switch from one to the other: ctrla then tab
+After splitting, you need to go into the new region and start a new session via ctrla then c before you can use that area.
+Ctrl+a c	new window	 
+to kill a stalled window
+Ctrl+a window number (go to the stalled window) the Ctrl+a :kill
+Ctrl+a n	next window	I bind F12 to this
+Ctrl+a p	previous window	I bind F11 to this
+Ctrl+a "	select window from list	I have window list in the status line
+Ctrl+a Ctrl+a	previous window viewed	 
+ 	 	 
+Ctrl+a S	split terminal horizontally into regions	Ctrl+a c to create new window there
+Ctrl+a |	split terminal vertically into regions	Requires screen >= 4.1
+Ctrl+a :resize	resize region	 
+Ctrl+a :fit	fit screen size to new terminal size	Ctrl+a F is the same. Do after resizing xterm
+Ctrl+a :remove	remove region	Ctrl+a X is the same
+Ctrl+a tab	Move to next region	 
+ 	 	 
+Ctrl+a d	detach screen from terminal	Start screen with -r option to reattach
+Ctrl+a A	set window title	 
+Ctrl+a x	lock session	Enter user password to unlock
+Ctrl+a [	enter scrollback/copy mode	Enter to start and end copy region. Ctrl+a ] to leave this mode
+Ctrl+a ]	paste buffer	Supports pasting between windows
+Ctrl+a >	write paste buffer to file	useful for copying between screens
+Ctrl+a <	read paste buffer from file	useful for pasting between screens
+Ctrl+a k to kill current windows.    
+
+vncserver setup:
+https://linode.com/docs/applications/remote-desktop/install-vnc-on-ubuntu-16-04/
+https://www.smarthomebeginner.com/setup-vnc-server-on-ubuntu/ (For full desktop)
+sudo apt-get install vnc4server
+sudo apt-get install --no-install-recommends ubuntu-desktop gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal -y
+Copy to ~/.vnc/xstartup
+#!/bin/sh
+
+# Uncomment the following two lines for normal desktop:
+# unset SESSION_MANAGER
+# exec /etc/X11/xinit/xinitrc
+
+[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup
+[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources
+xsetroot -solid grey
+vncconfig -iconic &
+x-terminal-emulator -geometry 80x24+10+10 -ls -title "$VNCDESKTOP Desktop" &
+x-window-manager &
+
+gnome-panel &
+gnome-settings-daemon &
+metacity &
+nautilus &
+
+run
+vncserver :1 -geometry 1600x900
+
+ulimit -Ha 
+ 
+cd /mnt/arch # or where you are preparing the chroot dir
+mount -t proc proc proc/
+mount -t sysfs sys sys/
+mount -o bind /dev dev/
+
+
+
+buildroot menuconfig issue
+export GCCVER=4.2.1
+export MAKEVER=3.81
+make menuconfig
+
+
+Top command
+to increase number of line in cpu usage
+export LINES=<number of lines>
+and then run top command
+
+TFTP Server Install and Setup
+================================
+Install following packages.
+  sudo apt-get install xinetd tftpd tftp
+Create /etc/xinetd.d/tftp and put this entry
+    service tftp
+    {
+    protocol        = udp
+    port            = 69
+    socket_type     = dgram
+    wait            = yes
+    user            = nobody
+    server          = /usr/sbin/in.tftpd
+    server_args     = /tftpboot
+    disable         = no
+    }
+Create a folder /tftpboot this should match whatever you gave in server_args. mostly it will be tftpboot
+   sudo mkdir /tftpboot
+   sudo chmod -R 777 /tftpboot
+   sudo chown -R nobody /tftpboot
+Restart the xinetd service.
+   sudo service xinetd restart
+Now our tftp server is up and running.
+Testing our tftp server
+   Create a file named test with some content in /tftpboot path of the tftp server
+   Obtain the ip address of the tftp server using ifconfig command
+   Now in some other system follow the following steps.
+    tftp 192.168.1.2
+    tftp> get test
+    Sent 159 bytes in 0.0 seconds
+    tftp> quit
+    cat test
+
+Linux checkpatch script for code indendation
+==============================================
+<linux>scripts/checkpatch.pl   --no-tree --no-signoff --terse  --file *
+<linux>scripts/checkpatch.pl   --no-tree --no-signoff --terse  -g <commit-id>
+	
+Bitbake commands:
+===================================
+bitbake <image>	Bake an image (add -k to continue building even errors are found in the tasks execution)
+bitbake <package> -c <task>	 Execute a particular package's task. Default Tasks names: fetch, unpack, patch, configure, compile, install, package, package_write, and build.
+                             Example: To (force) compiling a kernel and then build, type:
+                             $ bitbake  linux-imx -f -c compile
+                             $ bitbake linux-imx
+Example: To show all packages included on fsl-image-gui
+bitbake <image > -g -u depexp  Show the package dependency for image.
+                               $ bitbake fsl-image-gui -g -u depexp
+                               NOTE: This command will open a UI window, so it must be execute on a console inside the host machine (either virtual or native).
+bitbake <package> -c  devshell	Open a new shell where with neccesary system values already defined for package
+hob	bitbake frontend/GUI.
+bitbake <package> -c listtasks	List all tasks for package
+bitbake virtual/kernel -c menuconfig   Interactive kernel configuration
+bitbake <image> -c fetchall	Fetch sources for a particular image
+bitbake-layers show-layers  --> Show layers
+bitbake-layers show-recipes "*-image-*"	Show possible images to bake. Without "*-images-*", it shows ALL recipes
+bitbake -g <image> && cat pn-depends.dot | grep -v -e '-native' | grep -v digraph | grep -v -e '-image' | awk '{print $1}' | sort 
+bitbake -g <pkg> && cat pn-depends.dot | grep -v -e '-native' | grep -v digraph | grep -v -e '-image' | awk '{print $1}' | sort
+bitbake –v <image> 2>&1 | tee image_build.log 	Print (on console) and store verbose baking
+bitbake -s | grep <pkg>	Check if certain package is present on current Yocto Setup
+
+NOTE: Resolving any missing task queue dependencies
+NOTE: PN build list saved to 'pn-buildlist'
+NOTE: Task dependencies saved to 'task-depends.dot'
+NOTE: Flatened recipe dependencies saved to 'recipe-depends.dot'
+
+
+To open password protected file using linux commands
+install pdfcrack application
+pdfcrack -w pwd_list.txt -f eStatement1083IN_2018-02-28_10_51.pdf
+
+
+VIm plugins
+--------------------
+autoproto.vim  --> auto search on tags on bracket close and opens in new horizontal split buffer
+autoclose.vim  --> auto close brackets and ""
