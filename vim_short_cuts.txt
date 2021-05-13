@@ -81,6 +81,8 @@ Cut/copy and paste using visual selection
 --> To highlight the search word in vim
            :set hlsearch
 			
+--> To highlight text more than 80 char lenth
+:match ErrorMsg '\%>80v.\+'
 --> To sort lines by length in a file
   :%s/^/\=repeat('0', 8 - strlen(strlen(getline('.')))) . strlen(getline('.'))/ | sort | %s/^\d\{8\}// 
   
@@ -125,6 +127,14 @@ C:\Program Files\Vim\vim73\plugin
 	find . -name "*.[ch]" -print | xargs ctags -a  /* working fine */
 	set tags=/projects/magnum/praveenb/storage/NPB3.3.1/NPB3.3-SER/tags
 	ctags -R
+
+-->Cscope
+    "cscope -R" Then you get options.
+    Press down arrow. Then you will move to your required option. Type whatever you want at the respective option.
+    From the search result. Use arrows(Up and down) then Press "enter key" to see the detailed file.
+    ":q" to exit from the file.
+    Press "Tab key" to come to the cscope options.
+    "ctrl + d" to exit from the cscope.
 
 
 --> To run a command on all the lines of a another command ouput
@@ -179,6 +189,8 @@ git push origin local_branch:remote_branch
 git push origin broot_qaq/01:proposed/praveenb/rtc_driver_xlp2xx_qaq01
 git push origin gcc_492:proposed/praveenb/gcc_492
 
+git pull --rebase [To pull and merge local commits]
+git rebase --continue
 git status . --untracked-files=no
 git add drivers/rtc/rtc-xlp.c
 git commit
@@ -188,6 +200,16 @@ git show --name-only commit-id
 git show --name-only 065d88c6f487890ea2120b742907ee987289feaa
 git blame file (to check line by line authors)
 git diff HEAD (diff with new files, git add new file and take git diff)
+git reset HEAD~ (to unstag the last commit changes)
+
+To take format patch for n number of commits with commit meta data
+git format-patch HEAD~4..HEAD --stdout > changes.patch
+
+To unstag last commit changes
+git reset HEAD^
+
+To stag last commit changes
+git reset --soft HEAD^
 
 TO modify existing comment/commit (add chenges along with old changes)
 git commit --amend
@@ -253,6 +275,7 @@ To switch tabs in vim:
 <tab no> gt
 --------------------------------------
 TO switch windows in screen command
+to send ctrl + a in screen type ctrl a a
 ctrl + a then window number
 or ctrl + a + '
 or ctrl + a + "
@@ -372,6 +395,8 @@ cat  /sys/devices/platform/xlpmmc/mmclogdata | nc 10.131.60.158 8888
 
 #TO change default shell on ssh login
 sudo chsh <username> -s /bin/bash
+OR
+sudo chsh -s /bin/bash username
 
 # to clear the screem after closing the vim
 export TERM=xterm on bash
@@ -414,6 +439,7 @@ screen -r screen_id
 After splitting, you need to go into the new region and start a new session via ctrla then c before you can use that area.
 Ctrl+a c	new window	 
 to kill a stalled window
+Ctrl + a ? for help window
 Ctrl+a window number (go to the stalled window) the Ctrl+a :kill
 Ctrl+a n	next window	I bind F12 to this
 Ctrl+a p	previous window	I bind F11 to this
@@ -441,7 +467,7 @@ https://linode.com/docs/applications/remote-desktop/install-vnc-on-ubuntu-16-04/
 https://www.smarthomebeginner.com/setup-vnc-server-on-ubuntu/ (For full desktop)
 sudo apt-get install vnc4server
 sudo apt-get install --no-install-recommends ubuntu-desktop gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal -y
-Copy to ~/.vnc/xstartup
+Copy below lines to ~/.vnc/xstartup
 #!/bin/sh
 
 # Uncomment the following two lines for normal desktop:
@@ -460,8 +486,29 @@ gnome-settings-daemon &
 metacity &
 nautilus &
 
-run
+make sure the xstartup should have executable permissions
+chmod +x ~/.vnc/xstartup
+run:
+---------
 vncserver :1 -geometry 1600x900
+
+
+pkill -9 -f bitbake
+
+New working on Ubuntu 18:
+===============================
+add below lines to ~/.vnc/xstartup
+#!/bin/sh
+unset SESSION_MANAGER
+unset DBUS_SESSION_BUS_ADDRESS
+startxfce4 &
+
+[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup
+[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources
+xsetroot -solid grey
+vncconfig -iconic &
+
+chmod +x ~/.vnc/xstartup
 
 ulimit -Ha 
  
@@ -516,6 +563,39 @@ Testing our tftp server
     tftp> quit
     cat test
 
+NFS Server steps:
+===================================
+sudo apt-get install nfs-kernel-server
+sudo chown nobody:nogroup /var/nfs  [sharing Directory]
+sudo vi /etc/exports
+	add below lines
+	directory_to_share       *(rw,sync,no_root_squash)
+sudo exportfs -a
+sudo service nfs-kernel-server start
+
+On client system:
+sudo apt-get install nfs-common
+   sudo mount 1.2.3.4:/var/nfs /mnt   
+   OR
+   mount -t nfs -o nolock 10.131.60.13:/<Full path of directory> /mnt
+   
+Samba server setup:
+===========================================
+sudo apt-get install samba
+sudo smbpasswd -a <user_name>   /* new password for samba user */
+sudo vi /etc/samba/smb.conf     /* add share directory details to conf file */
+[praveenb]
+  comment = YOUR COMMENTS
+  path = /media/workspace/home/praveenb/
+  read only = no
+  guest ok = yes
+	
+sudo service smbd restart
+
+On windows:
+map network directory like below
+\\<ip>\<praveenb>   /* give the name inside the [] this is share name */ 
+
 Linux checkpatch script for code indendation
 ==============================================
 <linux>scripts/checkpatch.pl   --no-tree --no-signoff --terse  --file *
@@ -559,3 +639,219 @@ VIm plugins
 --------------------
 autoproto.vim  --> auto search on tags on bracket close and opens in new horizontal split buffer
 autoclose.vim  --> auto close brackets and ""
+
+yocto changes pull
+==================
+repo sync
+
+Git own repo:
+===================
+https://github.com/
+prawinb/Prawinb@2
+git push origin master
+
+To download sub-directories and files from a webpage
+=====================================================
+wget -r -np -nH --cut-dirs=3 -R index.html http://hostname/aaa/bbb/ccc/ddd/
+
+Explanation:
+
+    It will download all files and subfolders in ddd directory:
+    recursively (-r),
+    not going to upper directories, like ccc/… (-np),
+    not saving files to hostname folder (-nH),
+    but to ddd by omitting first 3 folders aaa, bbb, ccc (--cut-dirs=3)
+    excluding index.html files (-R index.html)
+
+	
+Ubuntu just update the minor version:
+==============================
+apt-get dist-upgrade (14.04.01 --> 14.04.05)
+
+do-release-upgrade --> to update the release version  (14 --> 16)
+
+Dynamic IP assign and dnsserver settings
+=========================================
+add it to /etc/resolv.conf
+nameserver 192.19.189.30
+nameserver 192.19.189.10
+search dhcp.broadcom.net
+
+To assign dynamic ip:
+dhclient eth0
+
+check /etc/network/interfaces
+--------------
+auto lo
+iface lo inet loopback
+
+auto eth1
+  iface eth1 inet static
+  netmask 255.255.248.0
+  address 10.122.71.125
+  gateway 10.122.64.1
+  
+Xterm/Display/xming setup on putty:
+====================================
+https://aruljohn.com/info/x11forwarding/
+
+What you need
+
+    Xming : an X-Server that starts on top of your desktop. Download Xming and install it.
+    PuTTY : an SSH client. Download PuTTY (if using Windows) and save it on your hard disk.
+
+Configure Xming
+
+    Click on the Start button in Windows XP, select Xming ? XLaunch
+    At the Display settings dialog box, select Multiple windows and set the Display number as 0. Click on Next.
+    Keep clicking on Next button till you reach the Finish configuration page, then click on the Finish button.
+
+Configure PuTTY
+
+    Start PuTTY.
+    In the PuTTY Configuration section, on the left panel, select Connection ? SSH ? X11
+    On the right panel, click on the Enable X11 forwarding checkbox
+    Set the X display location as :0.0
+    Click on Session option on the left panel.
+    Enter the hostname or IP address in the Host Name textbox
+    Save the session.
+
+Running the X applications from PuTTY
+
+    Double-click on your PuTTY session and login. After you login, a file named .Xauthority will be created.
+
+    Check if the DISPLAY variable has been set.
+
+    echo $DISPLAY
+
+You should see a meaningful value for $DISPLAY
+
+    Start any X application, say xterm.
+
+    xterm
+
+Format and create partition on devices
+fdisk /dev/sdx
+mkfs.ext4 /dev/sdx1
+
+Read minicom uart output to a file
+sudo stty -F /dev/ttyUSB0 115200
+sudo cat /dev/ttyUSB0 > my_log_file.txt
+
+
+boot kernel from uboot/u-boot
+====================================
+setenv bootargs "console=ttyS0,115200n8 maxcpus=1 earlycon=uart8250,mmio32,0x48100000 ignore_loglevel initcall_debug"
+dt/rootfs size and dtb
+booti 0x80080000 0x85000000:<size of CPIO image> 0x82000000
+
+with mkimage uImage
+bootm 0x80080000
+
+with kernel and dtb
+booti 0x80080000 - 0x82000000
+
+
+Tmux commands:
+========================================
+tmux cheat codes: https://gist.github.com/MohamedAlaa/2961058
+tmux new -s tmux_session_name
+tmux kill-session -t  session_name
+tmux a -d -t session_name  to reattach
+tmux ls list tmux sessions
+tmux source-file .tmux.conf
+
+
+Ctrl+b and d to detch session
+Ctrl+b " — split pane horizontally.
+Ctrl+b % — split pane vertically.
+Ctrl+b arrow key — switch pane.
+Hold Ctrl+b, don’t release it and hold one of the arrow keys — resize pane.
+Ctrl+b c — (c)reate a new window.
+Ctrl+b n — move to the (n)ext window.
+Ctrl+b p — move to the (p)revious window.
+Ctrl+b ' - window select by index
+Ctrl+b [ - To scroll up and Just "q" for quit
+Ctrl+b w - window list
+
+
+%  vertical split
+"  horizontal split
+// This assumes that you've hit ctrl + b and : to get to the command prompt
+:resize-pane -L
+
+Here are some additional tmux pane resizing examples:
+
+:resize-pane -D (Resizes the current pane down)
+:resize-pane -U (Resizes the current pane upward)
+:resize-pane -L (Resizes the current pane left)
+:resize-pane -R (Resizes the current pane right)
+:resize-pane -D 10 (Resizes the current pane down by 10 cells)
+:resize-pane -U 10 (Resizes the current pane upward by 10 cells)
+:resize-pane -L 10 (Resizes the current pane left by 10 cells)
+:resize-pane -R 10 (Resizes the current pane right by 10 cells)
+
+
+o  swap panes
+q  show pane numbers
+x  kill pane
++  break pane into window (e.g. to select text by mouse to copy)
+-  restore pane from window
+?  space - toggle between layouts
+<prefix> q (Show pane numbers, when the numbers show up type the key to goto that pane)
+<prefix> { (Move the current pane left)
+<prefix> } (Move the current pane right)
+<prefix> z toggle pane zoom
+
+
+tmux source-file .tmux.conf
+.tmux.conf
+------------------------------
+unbind C-b
+set -g prefix C-a
+	Changing the Prefix
+	
+set-window-option -g window-status-current-bg yellow
+	Highlighting Current Window Using Specified Colour
+	
+set-option -g mouse-select-pane on
+	Pane Switching Using Mouse
+
+bind-key a send-prefix
+Then, pressing Ctrl-a + a will send Ctrl-a to the terminal.
+
+
+Address to line on elf
+==========================
+addr2line -e ../vksim/build/zephyr/zephyr.elf 0x40b3e2
+
+
+vdi passwords:
+==================
+username: pb943721
+pwd: praveen123
+
+
+Run command even after ssh connection exit
+setssid <command>
+
+
+rm -f /dev/null; mknod -m 666 /dev/null c 1 3
+
+To stop kernel log var/log
+================================
+systemctl disable rsyslog
+
+To get list of ips in local network
+===================================
+nmap -sn 10.192.51.1/24
+
+
+trace32/ ramdump
+====================
+open simarm
+run crm script
+open all required files.
+
+to open memory as structure, run
+v.v (struct variable *)(address)
