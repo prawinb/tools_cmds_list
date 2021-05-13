@@ -1,0 +1,128 @@
+Ubuntu
+=================================
+ssh-server
+------------------------------
+apt-get install openssh-server
+ 
+ Optional:
+	nano /etc/ssh/sshd_config 
+	service ssh restart 
+
+Auto mount drives on startup
+-----------------------------
+sudo blkid
+sudo gedit /etc/fstab
+	Add at the end of the file fstab:
+	UUID=D638F77338F7514B /media/baraldi/win_www ntfs defaults 0 0
+mount -a
+
+Add user with specific home directory
+------------------------------------------
+useradd -m -d /media/workspace/home/praveenb praveenb
+sudo passwd praveenb
+	To change home directory
+	usermod -d /path/to/new/directory username
+	
+vi /etc/sudoers
+add new user name
+
+install vim
+-------------
+sudo apt-get install vim-gnome
+
+install vncserver
+-----------------
+https://linode.com/docs/applications/remote-desktop/install-vnc-on-ubuntu-16-04/
+sudo apt-get install vnc4server
+
+Copy to ~/.vnc/xstartup
+	#!/bin/sh
+
+	# Uncomment the following two lines for normal desktop:
+	# unset SESSION_MANAGER
+	# exec /etc/X11/xinit/xinitrc
+
+	[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup
+	[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources
+	xsetroot -solid grey
+	vncconfig -iconic &
+	x-terminal-emulator -geometry 80x24+10+10 -ls -title "$VNCDESKTOP Desktop" &
+	x-window-manager &
+
+	gnome-panel &
+	gnome-settings-daemon &
+	metacity &
+	nautilus &
+
+vncserver :1 -geometry 1600x900
+
+install samba server to map directory in windows
+--------------------------------------------------
+
+
+Network setup:
+--------------
+dns settings:
+---------------
+edit /etc/resolve.conf
+
+nameserver 192.19.189.30
+nameserver 192.19.189.10
+search dhcp.broadcom.net
+
+static ip:
+----------------
+edit /etc/network/interfaces
+
+auto lo
+iface lo inet loopback
+
+auto eth1
+  iface eth1 inet static
+  netmask 255.255.248.0
+  address 10.122.71.125
+  gateway 10.122.64.1
+
+dynamic ip:
+------------
+dhclient eth0
+dhcp (on uboot)
+
+Linux utilis:
+==================
+sudo apt-get install screen
+---------------------------
+	screen -S cygnus
+
+Change shell for user
+----------------------
+sudo usermod -s /bin/bash username
+
+Yocto setup:
+--------------
+	for ubuntu 14.4.01 version
+		You should be able to use any of the listed mirrors by adding a line to your /etc/apt/sources.list like this:
+		At starting of file
+		deb http://cz.archive.ubuntu.com/ubuntu trusty-updates main 
+		sudo apt-get update --fix-missing
+
+sudo apt-get install libjson-perl chrpath git build-essential diffstat texinfo gawk chrpath gcc-multilib wget socat libsdl1.2-dev mtd-utils libssl-dev uuid-dev nfs-common libmagickwand-dev
+
+wget http://infocenter.arm.com/help/topic/com.arm.doc.faqs/attached/14522/ds-deps-ubuntu_64.sh
+sudo ./ds-deps-ubuntu_64.sh
+
+mkdir ~/bin
+PATH=~/bin:$PATH
+
+curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+chmod a+x ~/bin/repo
+
+sudo mkdir -p /projects/ccxsw
+sudo mkdir -p /projects/ccxsw_tools
+
+Add it to /etc/fstab
+	inbinas03.ibn.broadcom.net:/ifs/inbinas03/projects/ccxsw /projects/ccxsw nfs rw,suid,fg,hard,intr,proto=tcp,vers=3    0
+	inbinas03.ibn.broadcom.net:/ifs/inbinas03/homeproj/ccxsw_tools /projects/ccxsw_tools nfs rw,suid,fg,hard,intr,proto=tcp,vers=3    0
+sudo mount -a
+  
+ 
