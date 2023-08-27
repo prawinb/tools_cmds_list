@@ -67,7 +67,7 @@ Cut/copy and paste using visual selection
 --> to know the disk usage of a folder
 	 du -sh name
 -->To list numeric file permissions on Linux
-  stat -c ì%a %nî * | sort 
+  stat -c ‚Äú%a %n‚Äù * | sort 
 --> to get numbers in incrementa order
 	first insert starting number in every line
 	then select all the line numbers then press "shift" + ":"
@@ -347,19 +347,19 @@ then it will open a terminal with new sheel
 To start a gdb debugging session in emacs:
 -----------------------------------------------------------------------
 
-®      Start emacs without specifying a file
+¬®      Start emacs without specifying a file
 
 o       Unix Prompt >emacs
 
-®      Issue the command to execute a program on the emacs command line
+¬®      Issue the command to execute a program on the emacs command line
 
 o       ESC-x  (then hit return)
 
-®      Start gdb
+¬®      Start gdb
 
 o       gdb (it will follow the M-x, which remains on the emacs command line)
 
-®      You will then be prompted by the phrase run like this? Add the file to debug (or use the file command after gdb starts)
+¬®      You will then be prompted by the phrase run like this? Add the file to debug (or use the file command after gdb starts)
 
 The gdb environment will appear inside the single emacs window.
 to kill the emacs press (Esc then CNTRL+x) type kill-emacs (or) ctrl+x ctrl+c
@@ -385,8 +385,8 @@ mips64-nlm-linux-objcopy --set-start=`mips64-nlm-linux-readelf -h vmlinux | awk 
 
 nc copy commands:
 ---------------------------------------------------------------------------------------
-1.	Assign IP address under initramfs (udhcpc ñi ethX) and note down the IP_ADDR.
-2.	nc ñl ñp 8888 >u-boot.bin
+1.	Assign IP address under initramfs (udhcpc ‚Äìi ethX) and note down the IP_ADDR.
+2.	nc ‚Äìl ‚Äìp 8888 >u-boot.bin
 nc -l -p 8888 > mmc_log_e2.bin
 
 On x86, execute the following commands:
@@ -425,7 +425,7 @@ screen commands
 start a new screen
 --> screen
 to detach from screen
---> "Ctrl-Aî and ìdì
+--> "Ctrl-A‚Äù and ‚Äúd‚Äú
 to list the screens
 screen -ls
 re-ttach screen
@@ -463,10 +463,61 @@ Ctrl+a <	read paste buffer from file	useful for pasting between screens
 Ctrl+a k to kill current windows.    
 
 vncserver setup:
+sudo x11vnc -xkb -noxrecord -noxfixes -noxdamage -display :0 -auth /var/run/lightdm/root/:0 -usepw
+
+for ubuntu 20 --> https://linuxize.com/post/how-to-install-and-configure-vnc-on-ubuntu-20-04/
+sudo apt-get install vnc4server
+sudo apt-get install --no-install-recommends ubuntu-desktop gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal xfce4 xfce4-goodies -y
+
+nano ~/.vnc/xstartup
+Copy
+#!/bin/sh
+unset SESSION_MANAGER
+unset DBUS_SESSION_BUS_ADDRESS
+exec startxfce4 
+
+chmod u+x ~/.vnc/xstartup
+
+~/.vnc/config
+geometry=1920x1080
+dpi=96
+
+vncserver
+
+
+to setup vnc on startup
+sudo nano /etc/systemd/system/vncserver@.service
+[Unit]
+Description=Start TightVNC server at startup
+After=syslog.target network.target
+
+[Service]
+Type=forking
+User=praveenb
+Group=praveenb
+WorkingDirectory=/home/praveenb
+
+PIDFile=/home/praveenb/.vnc/%H:%i.pid
+ExecStartPre=-/usr/bin/vncserver -kill :%i > /dev/null 2>&1
+ExecStart=/usr/bin/vncserver -depth 24 -geometry 1280x800 :%i
+ExecStop=/usr/bin/vncserver -kill :%i
+
+[Install]
+WantedBy=multi-user.target
+
+Next, make the system aware of the new unit file.
+    sudo systemctl daemon-reload
+Enable the unit file.
+    sudo systemctl enable vncserver@1.service
+sudo systemctl start vncserver@1
+sudo systemctl status vncserver@1
+
+
+use vncserver with this command vncserver -localhost no
+
 https://linode.com/docs/applications/remote-desktop/install-vnc-on-ubuntu-16-04/
 https://www.smarthomebeginner.com/setup-vnc-server-on-ubuntu/ (For full desktop)
-sudo apt-get install vnc4server
-sudo apt-get install --no-install-recommends ubuntu-desktop gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal -y
+
 Copy below lines to ~/.vnc/xstartup
 #!/bin/sh
 
@@ -493,10 +544,26 @@ run:
 vncserver :1 -geometry 1600x900
 
 
+
 pkill -9 -f bitbake
 
 New working on Ubuntu 18:
 ===============================
+unset SESSION_MANAGER
+unset DBUS_SESSION_BUS_ADDRESS
+#startxfce4 &
+gnome-panel &
+gnome-settings-daemon &
+metacity &
+nautilus &
+
+[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup
+[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources
+xsetroot -solid grey
+vncconfig -iconic &
+
+
+
 add below lines to ~/.vnc/xstartup
 #!/bin/sh
 unset SESSION_MANAGER
@@ -621,7 +688,7 @@ bitbake-layers show-layers  --> Show layers
 bitbake-layers show-recipes "*-image-*"	Show possible images to bake. Without "*-images-*", it shows ALL recipes
 bitbake -g <image> && cat pn-depends.dot | grep -v -e '-native' | grep -v digraph | grep -v -e '-image' | awk '{print $1}' | sort 
 bitbake -g <pkg> && cat pn-depends.dot | grep -v -e '-native' | grep -v digraph | grep -v -e '-image' | awk '{print $1}' | sort
-bitbake ñv <image> 2>&1 | tee image_build.log 	Print (on console) and store verbose baking
+bitbake ‚Äìv <image> 2>&1 | tee image_build.log 	Print (on console) and store verbose baking
 bitbake -s | grep <pkg>	Check if certain package is present on current Yocto Setup
 
 NOTE: Resolving any missing task queue dependencies
@@ -658,7 +725,7 @@ Explanation:
 
     It will download all files and subfolders in ddd directory:
     recursively (-r),
-    not going to upper directories, like ccc/Ö (-np),
+    not going to upper directories, like ccc/‚Ä¶ (-np),
     not saving files to hostname folder (-nH),
     but to ddd by omitting first 3 folders aaa, bbb, ccc (--cut-dirs=3)
     excluding index.html files (-R index.html)
@@ -675,7 +742,7 @@ Dynamic IP assign and dnsserver settings
 add it to /etc/resolv.conf
 nameserver 192.19.189.30
 nameserver 192.19.189.10
-search dhcp.broadcom.net
+
 
 To assign dynamic ip:
 dhclient eth0
@@ -763,13 +830,13 @@ tmux source-file .tmux.conf
 
 
 Ctrl+b and d to detch session
-Ctrl+b " ó split pane horizontally.
-Ctrl+b % ó split pane vertically.
-Ctrl+b arrow key ó switch pane.
-Hold Ctrl+b, donít release it and hold one of the arrow keys ó resize pane.
-Ctrl+b c ó (c)reate a new window.
-Ctrl+b n ó move to the (n)ext window.
-Ctrl+b p ó move to the (p)revious window.
+Ctrl+b " ‚Äî split pane horizontally.
+Ctrl+b % ‚Äî split pane vertically.
+Ctrl+b arrow key ‚Äî switch pane.
+Hold Ctrl+b, don‚Äôt release it and hold one of the arrow keys ‚Äî resize pane.
+Ctrl+b c ‚Äî (c)reate a new window.
+Ctrl+b n ‚Äî move to the (n)ext window.
+Ctrl+b p ‚Äî move to the (p)revious window.
 Ctrl+b ' - window select by index
 Ctrl+b [ - To scroll up and Just "q" for quit
 Ctrl+b w - window list
@@ -845,7 +912,7 @@ systemctl disable rsyslog
 To get list of ips in local network
 ===================================
 nmap -sn 10.192.51.1/24
-
+nmap -sP 10.123.51.1/20
 
 trace32/ ramdump
 ====================
@@ -855,3 +922,20 @@ open all required files.
 
 to open memory as structure, run
 v.v (struct variable *)(address)
+
+
+RPM commands
+=======================
+
+rpm -iv --replacepkgs fb-*
+
+rpm -ivf <package name> install packages one by one
+rpm -qa | grep fb- <to get list of installed rpm's>
+rpm -e <package name> to uninstall package
+
+for trace32 on linux
+sudo apt install curl libxm4
+sudo rm /etc/fonts/conf.d/70-no-bitmaps.conf
+sudo fc-cache -f -v <path to t32, usually /opt>/t32/fonts
+
+https://e2e.ti.com/support/processors-group/processors/f/processors-forum/354262/general-issues-faced-while-setting-up-trace32-for-linux-debug-with-lauterbach-on-an-ubuntu-linux-pc
