@@ -67,7 +67,7 @@ Cut/copy and paste using visual selection
 --> to know the disk usage of a folder
 	 du -sh name
 -->To list numeric file permissions on Linux
-  stat -c â€œ%a %nâ€ * | sort 
+  stat -c “%a %n” * | sort 
 --> to get numbers in incrementa order
 	first insert starting number in every line
 	then select all the line numbers then press "shift" + ":"
@@ -347,19 +347,19 @@ then it will open a terminal with new sheel
 To start a gdb debugging session in emacs:
 -----------------------------------------------------------------------
 
-Â¨      Start emacs without specifying a file
+¨      Start emacs without specifying a file
 
 o       Unix Prompt >emacs
 
-Â¨      Issue the command to execute a program on the emacs command line
+¨      Issue the command to execute a program on the emacs command line
 
 o       ESC-x  (then hit return)
 
-Â¨      Start gdb
+¨      Start gdb
 
 o       gdb (it will follow the M-x, which remains on the emacs command line)
 
-Â¨      You will then be prompted by the phrase run like this? Add the file to debug (or use the file command after gdb starts)
+¨      You will then be prompted by the phrase run like this? Add the file to debug (or use the file command after gdb starts)
 
 The gdb environment will appear inside the single emacs window.
 to kill the emacs press (Esc then CNTRL+x) type kill-emacs (or) ctrl+x ctrl+c
@@ -385,8 +385,8 @@ mips64-nlm-linux-objcopy --set-start=`mips64-nlm-linux-readelf -h vmlinux | awk 
 
 nc copy commands:
 ---------------------------------------------------------------------------------------
-1.	Assign IP address under initramfs (udhcpc â€“i ethX) and note down the IP_ADDR.
-2.	nc â€“l â€“p 8888 >u-boot.bin
+1.	Assign IP address under initramfs (udhcpc –i ethX) and note down the IP_ADDR.
+2.	nc –l –p 8888 >u-boot.bin
 nc -l -p 8888 > mmc_log_e2.bin
 
 On x86, execute the following commands:
@@ -425,7 +425,7 @@ screen commands
 start a new screen
 --> screen
 to detach from screen
---> "Ctrl-Aâ€ and â€œdâ€œ
+--> "Ctrl-A” and “d“
 to list the screens
 screen -ls
 re-ttach screen
@@ -688,7 +688,7 @@ bitbake-layers show-layers  --> Show layers
 bitbake-layers show-recipes "*-image-*"	Show possible images to bake. Without "*-images-*", it shows ALL recipes
 bitbake -g <image> && cat pn-depends.dot | grep -v -e '-native' | grep -v digraph | grep -v -e '-image' | awk '{print $1}' | sort 
 bitbake -g <pkg> && cat pn-depends.dot | grep -v -e '-native' | grep -v digraph | grep -v -e '-image' | awk '{print $1}' | sort
-bitbake â€“v <image> 2>&1 | tee image_build.log 	Print (on console) and store verbose baking
+bitbake –v <image> 2>&1 | tee image_build.log 	Print (on console) and store verbose baking
 bitbake -s | grep <pkg>	Check if certain package is present on current Yocto Setup
 
 NOTE: Resolving any missing task queue dependencies
@@ -725,7 +725,7 @@ Explanation:
 
     It will download all files and subfolders in ddd directory:
     recursively (-r),
-    not going to upper directories, like ccc/â€¦ (-np),
+    not going to upper directories, like ccc/… (-np),
     not saving files to hostname folder (-nH),
     but to ddd by omitting first 3 folders aaa, bbb, ccc (--cut-dirs=3)
     excluding index.html files (-R index.html)
@@ -742,7 +742,7 @@ Dynamic IP assign and dnsserver settings
 add it to /etc/resolv.conf
 nameserver 192.19.189.30
 nameserver 192.19.189.10
-
+search dhcp.broadcom.net
 
 To assign dynamic ip:
 dhclient eth0
@@ -830,13 +830,13 @@ tmux source-file .tmux.conf
 
 
 Ctrl+b and d to detch session
-Ctrl+b " â€” split pane horizontally.
-Ctrl+b % â€” split pane vertically.
-Ctrl+b arrow key â€” switch pane.
-Hold Ctrl+b, donâ€™t release it and hold one of the arrow keys â€” resize pane.
-Ctrl+b c â€” (c)reate a new window.
-Ctrl+b n â€” move to the (n)ext window.
-Ctrl+b p â€” move to the (p)revious window.
+Ctrl+b " — split pane horizontally.
+Ctrl+b % — split pane vertically.
+Ctrl+b arrow key — switch pane.
+Hold Ctrl+b, don’t release it and hold one of the arrow keys — resize pane.
+Ctrl+b c — (c)reate a new window.
+Ctrl+b n — move to the (n)ext window.
+Ctrl+b p — move to the (p)revious window.
 Ctrl+b ' - window select by index
 Ctrl+b [ - To scroll up and Just "q" for quit
 Ctrl+b w - window list
@@ -912,7 +912,7 @@ systemctl disable rsyslog
 To get list of ips in local network
 ===================================
 nmap -sn 10.192.51.1/24
-nmap -sP 10.123.51.1/20
+
 
 trace32/ ramdump
 ====================
