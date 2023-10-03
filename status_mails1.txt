@@ -1,0 +1,2775 @@
+Sent:	Monday, February 10, 2014 5:57 PM
+1.       Reading Vulcan dru micro-architecture document.
+
+2.       Debugging issues found while generation dat files.  
+
+Job queue is circular queue but moving job by job linearly so reaching out
+of boundary value.
+
+Observed some memory leaks.
+
+Fixing these memory leaks.
+
+Sent:	Monday, February 03, 2014 6:14 PM
+1.       Dpi model code changes (fixed deactivate module issue in
+dpi_model)
+
+Calling process_data (search) function with zero length packet from
+deactivate module,
+
+instead of sending zero length packet with end anchored information from
+parser to downstream
+
+code changes sent for review.
+
+2.       Working on dat file generation for Vulcan.
+
+Changes in FD, MRD and FRD for Vulcan.
+
+In database dat file mini-engine instructions has to be added.
+
+Input.dat and ouput.dat files have to be generated based on new descriptor
+formats.
+
+Sent:	Monday, January 27, 2014 6:55 PM
+1.       Dpi model code changes (fixed deactivate module issue in
+dpi_model)
+Calling process_data (search) function with zero length packet while
+deactivating the particular module,
+instead of sending zero length packet with end anchored information from
+parser to downstream
+2.       Reading Vulcan Dru micro arch document.
+Sent:	Monday, January 20, 2014 6:51 PM
+1.       Started reading Vulcan DRU arch document.
+2.       Removed duplicate definition MAX_GROUP_ID. Already MAX_GROUPS
+exists.
+Replaced MAX_GROUP_ID with MAX_GROUPS in all dpi_model related files.
+
+Sent:	Friday, January 10, 2014 5:22 PM
+Reading and trying to understand the Vulcan micro
+architecture document.
+Mostly they covered on hardware related
+information not able to understand fully.
+Ran perf numbers on xlp9xx board
+Ran http_grammar with pacp_demo and demo on xlp9xx @
+1.4GHz
+
+Sent:	Monday, January 06, 2014 6:34 PM
+1.Ran daily regression tests with dpi_model with Vulcan board type
+Debugged failed tests.
+2.Fixed issues in compiler code for vulcan 
+Unsupported negative regex rules for Vulcan mini-engine.
+Eg:          Abc.*(?^def)xyz
+Unsupported if  zero length parts found in dot start rules.
+Eg:          ^.*abcd
+Drop zero length rules while converting to string rules.
+3.Stared reading Vulcan micro architecture document.
+New Modules in vulcan other than mini-engine
+1.Rings, DRU - Descriptor Ring Unit
+2.Ring station module
+Handles communication among rings , ring to slice and slice to ring
+Slice is a (one Big engine or mini-engine cluster)
+3.ReDrive logic (presents in both Big engine and Mini-engine)
+Handles communication among rings, DRU, BIU (Bus interface unit) 
+Changes in FD (Flow
+Descriptor).
+
+And following are my
+understanding from the document
+
+a.There is no common module or device connected to Big engine and
+Mini-engine. They are treated as separate devices.
+
+b. Software has to send packets to their respective device (either
+Big-Engine or Mini-Engine) based on flow and group_id.
+
+Sent:	Monday, December 30, 2013 6:03 PM
+Ran daily regression tests with dpi_model
+Debugged failed tests.
+Fixed issues in dpi_model.
+Added inspec compiler fail
+option and match length ignore option to dpi_model.
+Fixed issues in dpi_model
+coding.
+Pretest:
+Copied present pre_test to
+pre_test_old
+Removed v2 and v4 related scripts in pre_test
+Added dpi_model to device
+list in pre_test
+So that   scripts supported by dpi_model
+will run
+Added mini-engine tests to pre-test.
+
+Sent:	Monday, December 23, 2013 7:17 PM
+1. Fixed issues in dpi_model:
+a. Fixed offset issues.
+b. Fixed issues related to group id and deactivate module in
+normalizer module and base64 module
+c. Changed flag cap value from 96 to 0 in stitcher module (to take
+max flags supported by board type)
+d. Increased Max job count from 100 to 2000.
+e. Send flow offset from parser module to dfa module when parser
+activates dfa module.
+f.Device initialization will be based on xlp-board type passed in
+command line arguments to v3 (default xlp2xx)
+2.Added one Mini-engine test case to check stitcher tokens with
+different combinations of rules.
+3. Fixed an issue while comparing strings in main-engine stitcher
+Compare start anchor and end anchor along with actual
+string.
+
+Sent:	Monday, December 16, 2013 7:01 PM
+1. Handled duplicates in mini-engine rules.
+Comparing rule ast nodes to find duplicates.
+2.Fixed an end anchor issue in dpi_model
+a.Sending start of packet and end of packet information for
+stateless flow.
+b. Sending end of flow info for state full flow.
+c.Adding results as end anchored results to result queue for end
+anchored matches.
+3. Updated group to module table for multiple database
+a.Device module path will be selected based on database id and
+group id.
+b. Verified with multi database demo.
+4. Added extra debug information for mini-engine module and BSD
+module.
+Prints the rule info if the rule is not supported by mini-engine or BSD.
+5.Updated disassembler code.
+a.Validate image header before disassembling the database image.
+b.Print each modules image in the same order as in image header.
+c.Removed excessive reserved bytes in header.
+
+Sent:	Monday, December 09, 2013 7:02 PM
+1. Worked on finding duplicate rules in stitcher.
+2. Appending token programs to same token id if duplicate rule
+found.
+3. Fixed an issue in demo (linked with dpi_model)
+Stop sending end of job for stateless flow.
+So now demo is working fine with state full and stateless flows
+
+Sent:	Tuesday, December 03, 2013 9:33 AM
+1.worked on analyze rule info for nested quantifier rules (dot star
+inside a quantifier body)
+analyzed rule information for nested quantifier.
+Made Changes to  analyzing quantifier body function , changed this code to
+work for all types of quantifiers in easy way.
+2.Stared work on finding duplicate strings to assign same token id.
+
+Sent:	Monday, November 25, 2013 7:52 PM
+1. Unrolling the quantifier body (if quantifier body has dot star or
+split count more than 1) to make the dot star as top level
+So that stitcher can assign token and token programs for each part.
+2. Started working on analyzing rule info for nested quantifier rules
+(dot star inside a quantifier body)
+Eg: abc(def.*pqr.*xyz){2}lmn
+For each part  rule info like byte count , alpha count, split count has to
+collect.
+With this rule info, weather rule is mini-engine computable or not can be
+decided.
+
+Sent:	Tuesday, November 19, 2013 9:48 AM
+1. Expanding quantifier body (ab(cd.*ef){2}gh) for dot star rules to
+make dot star as top level
+Now different kind of dot star rules will be supported by mini-engine
+Eg: 
+1. ab(cd.*ef){2}gh
+2. ab(cd|ef){2}.*gh
+3. ab(cd{2,3}e){2}.*gh
+Expanding quantifier body for dot star rules if quantifier body has (.*,
+|, variable quantifier).
+
+Sent:	Monday, November 11, 2013 6:54 PM
+1. Checked in initial version of vulcan mini-engine compiler and
+model code
+2. Added parallel path for mini-engine and main engine in dpi_model
+Now dpi_model will work with mini-engine database also
+A path value will be set based on a database instructions present for
+particular group id.
+Based on this path value mini-engine or main engine path will be selected.
+
+3. Fixed offset issues related to parser module in dpi_model
+Handled parser byte offset in dfa module.
+Fixed anchor issues for parser module.
+
+4. Running daily regression scripts on dpi_model with mini-engine
+enabled
+tests present in l7tests (cisco ,broad web, etc) on dpi_model with
+mini-engine enabled.
+Found and fixed some issues in compiler and model.
+Analyzing failed test
+cases.
+
+Sent:	Tuesday, November 05, 2013 9:58 AM
+1.Sent code changes for review
+2.Fixed small issues when reviewing the code and testing.
+3.Tested with some random generated rules. 
+
+Sent:	Monday, October 28, 2013 7:58 PM
+Worked on compiler code to support mini-engine stitcher ( dot star rules )
+1.dot star rules will be converted to plan dot star rules
+with ast (part.*part)
+2. This rules will split into parts and each part will be
+assigned with a token and token program
+3. tested with existing mini-engine tests 
+TODO:
+1.Need to expand quantifier body (ab(cd.*de){2})
+2.And need to find duplicate strings when assigning token to a
+string
+
+Fixed mini-engine failing test cases
+Tests with split count more than 16 and alphabets count more than 32 are
+fixed
+
+Sent:	Monday, October 21, 2013 8:59 PM
+Working on compiler code to support mini-engine stitcher ( dot star rules
+) 
+convert dot star rules to string dot star rules as part1.*part2 each part
+is fixed length regex.
+And need to split these parts and assign token for each
+part
+
+Sent:	Wednesday, October 16, 2013 10:20 AM
+1.Working on compiler code to support mini-engine stitcher ( dot
+star rules ) 
+Writing a function to convert dot star rules to plain dot star rules with
+ast.
+
+Sent:	Monday, October 07, 2013 7:52 PM
+1.Working on compiler code to support mini-engine stitcher ( dot
+star rules ) 
+
+a.Analyzing different kinds of dot star rules and finding way to
+allocating tokens and token program to rule strings
+2.Tested mini-engine tests
+
+Sent:	Monday, September 30, 2013 7:40 PM
+1. Fixed issues in the sw-model and compiler code to support
+mini-engine
+2. Tested all mini-engine tests  with new sw-model .
+3. Working on code changes (sticther to handle strings) discuued in
+code review
+
+Sent:	Monday, September 23, 2013 7:37 PM
+1 .worked on software model to support
+mini-engine
+2.  tested mini-engine tests with this
+model
+3. fixed issues in compiler code related
+to mini-engine
+4. fixed issues in software model
+
+Sent:	Friday, September 13, 2013 6:10 PM
+1 . Understood the new software model.
+2.  debugging and analyzing model after
+parser included.
+3. fixed some small bugs.
+Now simple grammar with simple rules can be test by this
+model,
+And need fix some bugs
+1 .Start anchor and end anchor grammar
+rules not working.
+2. integer unit activate is not working .
+Need to test with complex rules grammars.
+
+Sent:	Tuesday, September 10, 2013 6:25 PM
+To:	Siva Krishna Gudivada
+Subject:	FW: Weekly Status Report WW36
+
+ 
+
+ 
+
+From: Siva (Sivaprasad) Pochiraju 
+Sent: Tuesday, September 10, 2013 5:56 PM
+To: Abhishek Joshi; Prasanna Mumbai; Sreenidhi Bharathkar Ramesh; Virendra
+Pathak; Anzi Mukundan; Mahaveer Jain; Manali Gupta; Mayank Vaish;
+MuraliKrishna Indela; Rahul Kumar Gupta; Richa Kaul; Vinod Mopuri; Kevin
+James; Pavani Reddy; Praveen B; Saswat Dash; Subhendu Behera; Tanmay
+Jagdale
+Subject: FW: Weekly Status Report WW36
+
+ 
+
+ 
+
+ 
+
+From: Pallathu Beerankutty Sadik 
+Sent: Tuesday, September 10, 2013 5:16 PM
+To: NL-cpsbu-swleads-List
+Subject: Weekly Status Report WW36
+
+ 
+
+NEC/RADISYS
+
+.         Analyzed the UBIFS issue in depth and found that the error is
+due to bit flips in empty pages which should not happen.
+
+We believe this is due to the property of the particular NAND only since
+Software is not writing anything to empty pages.
+
+Communicated our findings to Radisys in a conference call.
+
+.         Reviewed and gave feedback to Radisys who has implemented a
+workaround in UBIFS to handle the issue.
+
+.         kdump feature is completed. Merge pending (planning to merge
+this week).
+
+Huawei
+
+.         Developed a bare-metal app which can be launched from u-boot.
+This app shall be used for shared segment Demo.
+
+Linaro
+
+.         Continue to address the segfault of simple 'hello world' program
+using klibc. The problem seems to be in the beginning
+
+run-time preparation before invoking main, such as preparing the stack
+frame correctly for the process.
+
+The code ported as is from ARM32 doesn't work for aarch64.
+
+NAE
+
+.         Multiple issues in netlib/fmlib are been looked into. Got line
+rate for XLAUI using 32 CPUs with netlib
+
+patches from FAE and partial changes in fmnlib. 
+
+.         PTP feature developed. Merge pending. Also updated the PTP
+documentation.
+
+Buildroot
+
+.         With the ccache enabled, the 'make git-checkout' broke. Fix
+proposed and merged.
+
+.         Enabled ccache by default.
+
+.         Enable oprofile in Kernel when a user selects oprofile for
+compilation.
+
+.         Provide support for adding commandcenter into buildroot.
+
+.         Fixed extgit server issue (reported by Aricent).
+
+Linux-3.7
+
+.          
+
+VxWorks
+
+.         The loader code in vxworks was failing. Modified the loader code
+after going through the Griffin registers.
+
+With that the loader is now working. Tested by loading the binary on other
+cores/threads.
+
+Hiring
+
+.         Req split approved. Made offer to Manikanta.
+
+.         The trainee req got approved. 
+
+From:	Praveen B
+Sent:	Tuesday, September 10, 2013 9:58 AM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 09/2/2013 to 09/6/2013
+
+Hi Kumaravel,
+
+ 
+
+                Last week:
+
+                                Worked on compiler code to support Vulcan
+mini-engine 
+
+Able to generate mini-engine dfa and stitcher instructions .
+
+Tested with some regexes.
+
+Need to fix some issues (some rules with .* are not working)
+
+Need to review the code changes.
+
+ 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, September 02, 2013 7:49 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 08/26/2013 to 08/30/2013
+
+Hi Kumaravel,
+
+ 
+
+                Last week:
+
+                                Working on compiler code to support Vulcan
+mini-engine 
+
+Able to generate ac graph for mini-enginable rules, 
+
+Able to generate mini-engine dfa instructions .
+
+Need to test these generated instructions.
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Tuesday, August 27, 2013 9:54 AM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 08/19/2013 to 08/23/2013
+
+Hi Kumaravel,
+
+ 
+
+                Last week:
+
+                                Working on  vulcun mini - engine support
+
+                                                Understanding dfa code 
+
+Started code support for mini - engine
+
+1.       Generating ac graph 
+
+2.       Compiling ac graph and generating instructions
+
+ 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, August 19, 2013 6:41 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 08/12/2013 to 08/16/2013
+
+Hi Kumaravel,
+
+ 
+
+                Last week:
+
+                                Working on  vulcun mini - engine support
+
+.         Analyzed mini engine supportability rules
+
+.         Modified analyze rule for bsd  function to check a rule for mini
+engine supportability
+
+.          Made this function to work for both bsd compatibly check and
+mini engine compatibility check   
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, August 19, 2013 10:38 AM
+To:	Siva Krishna Gudivada; Lakshman (Lakshmana Siva Kumar) Garlapati
+Subject:	FW: Differences between Firefly A2 and FireflyB0
+Attachments:	Firefly_B0_Issues.xlsx
+
+Importance:	High
+
+ 
+
+ 
+
+From: Siva (Sivaprasad) Pochiraju 
+Sent: Monday, August 19, 2013 10:31 AM
+To: Prasanna Mumbai; Sreenidhi Bharathkar Ramesh; Virendra Pathak; Anzi
+Mukundan; Kuhan Ramanathan; Mahaveer Jain; Manali Gupta; Mayank Vaish;
+MuraliKrishna Indela; Rahul Kumar Gupta; Richa Kaul; Vinod Mopuri;
+Abhishek Joshi; Pavani Reddy; Praveen B; Subhendu Behera; Tanmay Jagdale
+Subject: FW: Differences between Firefly A2 and FireflyB0
+Importance: High
+
+ 
+
+Pay attention as we *may* need to validate/fix the relevant changes
+
+ 
+
+From: Christopher (Kueihsien) Tseng 
+Sent: Friday, August 16, 2013 2:09 AM
+To: NL-cpsbu-swleads-List
+Subject: Differences between Firefly A2 and FireflyB0
+Importance: High
+
+ 
+
+Dear All Leads/Managers,
+
+ 
+
+This is the full list of delta between Firefly A2 and B0.  Please note
+that the lower part in yellow are *not* fixed.
+
+ 
+
+http://confluence.broadcom.com/display/PWIPROCSW/Silicon+Product+Alerts
+
+ 
+
+Thanks.
+
+ 
+
+-Chris.
+
+From:	Praveen B
+Sent:	Monday, August 12, 2013 7:10 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 08/5/2013 to 08/9/2013
+
+Hi Kumaravel,
+
+ 
+
+Last week worked on:
+
+                                Started working on  vulcun mini - engine 
+
+                                                Understanding about mini
+engine
+
+                                                Understanding major
+changes from  main engine
+
+                                                Listing out rules which
+should supported mini engine 
+
+                
+
+Misc :  1 day PTO (Thursday)
+
+                
+
+                                
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, August 05, 2013 7:52 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 07/29/2013 to 08/2/2013
+
+Hi Kumaravel,
+
+ 
+
+Last week worked on:
+
+.         Enabling code base based on engines supported by target board
+
+                                                Enabling code base based
+on engines BSD, Transducers, base64, parser, Nfa, Stitcher
+
+                                                
+
+.         Started working on vulcun
+
+Understanding the changes in vulcun with respect to  griffin
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, July 29, 2013 2:10 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 07/22/2013 to 07/26/2013
+
+ 
+
+Hi Kumaravel,
+
+ 
+
+                Last week worked on:
+
+.         Enabling code base based on engines supported by target board
+
+                                                Enabling code base based
+on engines BSD, Transducers, base64, parser, Nfa, Stitcher
+
+                                                Based on engines supported
+by target board each individual engine code base will be activated 
+
+.         sdk-base
+
+                                                Moved to buildroot and
+tested for dpi apps
+
+                                                Found and reported
+building issues
+
+        
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Thursday, July 25, 2013 4:14 PM
+To:	Lakshman (Lakshmana Siva Kumar) Garlapati; Siva Krishna Gudivada
+Subject:	FW: SW status summary 07/23/2013
+
+
+
+_____________________________________________
+From: Siva (Sivaprasad) Pochiraju 
+Sent: Thursday, July 25, 2013 4:00 PM
+To: Prasanna Mumbai; Sreenidhi Bharathkar Ramesh; Virendra Pathak; Anzi
+Mukundan; Kuhan Ramanathan; Mahaveer Jain; Manali Gupta; Mayank Vaish;
+MuraliKrishna Indela; Rahul Kumar Gupta; Richa Kaul; Vinod Mopuri;
+Abhishek Joshi; Pavani Reddy; Praveen B; Subhendu Behera; Tanmay Jagdale
+Subject: FW: SW status summary 07/23/2013
+
+
+
+
+_____________________________________________
+From: Sriram Vaidyanathan 
+Sent: Thursday, July 25, 2013 4:01 AM
+To: Siva (Sivaprasad) Pochiraju; Krishnamurthy Vasanthrao Daulatabad;
+Jayachandran Chandrashekaran Nair; Christopher (Kueihsien) Tseng; Pallathu
+Beerankutty Sadik; Kumar (Kumaravel) Kanda Senniappan
+Subject: FW: SW status summary 07/23/2013
+
+
+FYI
+
+_____________________________________________
+From: Sriram Vaidyanathan 
+Sent: Tuesday, July 23, 2013 4:03 PM
+To: Nazar Zaidi
+Cc: David Hass; Ramon Macias; Viral Pandya; Satchit (Satchitanand) Jain;
+Shaun Kittle; Bruce Kauffmann
+Subject: SW status summary 07/23/2013
+
+
+
+Griffin: (SDK 3.0.0)  
+*	ICI/Multinode
+o	Add 9xx multi-nodes support
+o	xloader DDR DRAM initialization and bar setup for multi-node
+verified.
+o	u-boot PCIe enumeration on multi-node verified.
+o	ICI speed change
+o	Received code for recommended register programming and sequence
+from the Verification team.
+o	Porting it to xloader.
+*	Secure Boot:
+o	QA testing ongoing (on GVP1, 2 and 3)
+o	Added fuse tool usage print out
+o	Debug matched with disabled key, soft-fuse overwritten hard fuse
+value, no software change need.
+o	Notice size issue when including Secure Boot function in x-loader;
+it goes to 135K+ which requires disabling some drivers (e.g. flash device)
+in order to meet the system limitation.  The x-loader requires rework for
+better shape.
+*	DDR DRAM
+o	Investigated 1066Mhz DIMM failure and found it is related to
+RDIMM.
+o	Made a fix (prelaunch etc) such that single DIMM can pass
+consistently. 
+o	There are still issues with multiple-DIMM case which needs to be
+looked at.
+o	With soldered board, verified that all channels work with 666Mhz
+frequency DIMMs.
+o	Only single DIMM is verified to work on all slots of the soldered
+board. With multiple DIMMs, observed issues with even with 666Mhz.
+*	Command Center: Supporting the Post-SI with MBIST script.
+o	The python script Post-SI uses is a highly convoluted with many
+basic python scripts putting together and iterates thousands of times.
+o	The script itself runs successfully with the first iteration, but
+fails after.  Each basic script runs just fine as expected.
+o	It looks like a timing issue; requested FDT team to provide
+Post-SI some recommendation of required timing and sequence for better
+timing.
+o	Also, trying to add some delay into the ready-bit polling
+mechanism for the occasions that ready-bit not being set by HW after
+issuing a read command.
+o	The debugging is on-going (follow-up meeting with Post-SI and DFT
+later today).
+*	Interlaken: The Cortina board which uses CS3  is not responding to
+read/write requests. Amar looking into it. No update from HW.
+*	FMN: Working on cop2 save/restore between Userspace and Linux
+Kernel
+*	NAE:
+o	Enabled POE distribution vector support in linux nae driver.
+o	Enabled flow control support for ethtool. Merge pending.
+o	XLAUI: Link is up.
+o	XFI: Support updated. 
+*	Crypto:
+o	Got clarifications on Mute mask registers and verified the same on
+Griffin. Spent some time on verifying this on rtl model.
+o	Openssl testing completed on Eagle. Rebasing with qaq/27 in
+progress. 
+*	Regex: 
+o	Continuing to debug the multi-threaded demo issue.
+o	We find that occasionally the messages from DPI engine ends up in
+the wrong bucket. 
+o	We are not able to log the fmn messages via command center so
+debugging this issue is progressing slowly. 
+*	KVM
+o	Sent out testing procedure for dma_dp test on both bare metal
+linux and guest OS.
+o	Fixed issues (due to new change using fuse register in linux
+kernel) in qaq/27, the fix in qaq/29
+o	Studied guest uart issue. The failure is actually related QEMU
+input/output. A workaround has been placed. The root cause is not found
+yet.
+o	Started to look at qemu/guest virtio part.
+*	Hev2:  
+o	NAE app: On xlp9xx, POE distribution vector mode is now working.
+Code merged to qaq/29.
+o	DTR app: added xlp9xx support.  Code merged to qaq/29.
+o	App parameters: adding framework for application specific
+parameters merged to qaq/29.
+*	HALx
+o	FMN: proposed APIs and pushed to halx:
+devel/sreenidhibr/halx_msg_20130709.  Implementation in progress.
+o	Tested NAE loopback application (p2d and p2p descriptor formats)
+on xlp8xx board.
+o	Tested NAE loopback application (p2d and FBID descriptor formats)
+on xlp9xx board.
+o	P2P is not working on xlp9xx. Both FBID-P2P and regular p2p are
+not working. Problem is on the egress side. TX-DMA is not happening after
+sending the descriptors to STG1 FIFO. 
+*	HAL:
+o	NAE debug APIs: Making changes on top of Yongjun's debug API
+implementation 
+*	LZS
+o	LZS compression verified with P2D and P2P descriptors.
+o	Implementation of Decompression application in s/w completed
+o	Verified LZS compression using this s/w decompressor (with random
+text as well as a text file)
+o	Still need some clarifications on LZS block (bus/dev/func access
+etc) 
+*	CEK
+o	IPsec and IKE applications working with NAE on Griffin. (single
+CPU) 
+o	Tested following with IPSEC on griffin: 
+*	3DES, AES 128/192/256 CBC,CTR in combination with SHA1_hmac, MD5,
+SHA256 hmac, SHA512 hmac.
+*	AES128/256/512 GCM, XCBC and XCBC_MAC, CCM
+*	Tested camellia 128/256 CTR SAH1
+o	Debugging designer descriptor issue with Griffin SAE. 
+o	IKEv1 working now on Griffin. Verified Tunnel setup using DH
+Group2, AES128. Started work on IKEv2. 
+*	ALE:
+o	ALE Hev2 application: Completed the coding of NAE to ALE lookup
+path.  Code tested on eagle. Waiting for Griffin board. 
+o	ALE IP forwarding : Hooked IP forwarding application with ALE
+library on the old SDK2.2.6 branch, tested with ALE software lookup on
+eagle.
+*	Kernel 3.7: 
+o	Investigate CPUFREQ support - add basic CPUFREQ driver
+o	NUMA testing in progress - CPU and memory code tested and merged,
+device locality need some work (this is not in old SDK).
+o	Make mapped-kerned work with compressed kernel; with this the
+entry point fixup (awk script) is not needed with old u-boot
+o	Start reviewing Griffin patches - in progress
+o	pick clean/rebased patches to linux-oss.git
+o	Update cache code for XLP9xx
+			
+Vulcan:
+*	Read Open flow and OVS specs, talked to Kaushik to expand ALE to
+have more pipes and support max 6 tables, also suggested some enhancements
+in the search result and the support of packet header manipulation.
+*	VFIO discussion and research.
+
+SDK 2.3.0/2.2.8:
+*	Created and shared Dashboards for various forthcoming releases.
+*	DPI:
+o	The DPI code has been rebased into linux-userspace. The existing
+build scripts have been updated for this change.
+o	Subhendu is currently working on converting the DPI build system
+to buildroot.
+*	Participated in helping China Huawei ICI hang issue.
+*	Work with verification team to debug hardware page walker issue.
+*	Got the pcieperf application to work on XLP2xx setup in US.
+Workaround done in hyperexec library for now (possible uboot issue needs
+to be debugged with firefly or this could be a possible firefly bootup
+issue when working as a PCIE EP.
+*	Linux Native Command center: Cross compilation of python packages
+in progress. 
+*	u-boot:
+o	Restructured PCIe code base for 3xx and 8xx.
+o	The PCIe enumeration code has been modified to the follow the
+coding convention with dividing common function APIs and board/platform
+dependent fucntions.  This shall ensure the future scalability and
+sustaining.
+*	SDK 2.3.x Bugs:
+o	Linux kernel fails to init SD card. Feedback provided to Apps
+team.
+o	2.3-xlp416 ifconfig stats are incorrect intermittent. Worked on
+this, but couldn't reproduce.
+o	node_X_vc_mask single word value applies to cores 6 and 7 instead
+of 0 and 1
+o	NAE driver does not report correct link status. Fix proposed.
+Merge pending.
+o	Sending packets to the interface before insmod nae module causes
+nae failure. Worked on this, but couldn't reproduce.
+*	SDK 2.2.x Bugs
+o	NAE driver does not report correct link status: Fix proposed.
+Merge pending.
+o	mmcblk1 throwing error prints during linux bringup
+o	2.2.7.1-xlp416 :minigzip is not working using hardware engine
+			
+
+FreeBSD:
+*	Firefly boots - Freq code complete, NAE driver patches being
+reviewed
+*	XLP NAE: Jumbo frame support
+
+Linux Open source - 3.11 cycle in progress
+*	Review patches related to 3.11 issues; Posted patches for two
+issues found in testing; queued up for 3.11 rc cycle
+*	start planning for 3.12 - review/clean up pending patches
+*	Planning XLP 2XX support for 3.12
+	
+VxWorks:
+*	Port for Griffin underway. UART changes completed. The PIC changes
+required for UART are done.
+QA
+	Bugs:
+*	Linux(1), HyperExec(1), Firmware(1)
+*	Closed(1)
+	Functionality:
+*	Griffin validation
+o	GVP2: validated Secure boot and Virtualization
+o	GVP3: validated storage and flash
+o	Compilation failed for 32 bit Linux
+			Non-Griffin Validation
+o	U-boot compilation failed (EPSW-902)
+*	Completed 2.3-xlp416 testing, XLP3XX PCIe card validation, Hot CPU
+plugging test plan
+*	In Progress : Finding test packages to test Jvm, perl, python on
+Linux OSS 
+*	Working on popq test application
+	Performance:
+*	Worked on Nae_app hev2 performance dip on xlp2xx and xlp9xx 
+*	In Progress: Generating SNORT performance numbers on a customer
+request
+	Automation:
+*	Developed script for copying x-loader and u-boot to mmc
+*	Script Review: Completed OpenSSL and NAE review
+*	In Progress: buildroot automation 
+*	SDK to CEK Framework migration
+o	Completed : Automation of Openssl Tests.
+o	In Progress : SAE test automation
+
+Customer Projects:
+*	Aruba:
+o	Validated the functionality of ECDSA sign APIs after all point
+operations done in driver . 
+o	Testing of ECDSA sign APIs using openssl in progress. Modified the
+openssl sign APIs for the same.
+o	Aricent will provide us a more aggressive schedule this week for
+completing the Cisco diagnostics.
+*	Google:
+o	The Fastpath code changes to integrate with our modified Switch
+SDK APIs is not progressing quickly. Will need to rope in more resources
+to speed things up.
+o	Eric Olsen has told us that he will start evaluating XLP only by
+the end of the month.
+*	Radware: (PCIe DPI)
+o	Continued with coding the host side app. 
+o	Using the remote firefly pcie setup and patch given by Krishna,
+was able to complete basic handshake test. 
+*	Radisys
+o	Looking into UBIFS over ICI issue. We have not validated UBIFS
+till date. Hence, this task may take some time.
+o	Currently working on reproducing the issue.
+
+Infrastructure/MRD:
+*	SSL Offload:
+o	SSL proxy performance testing in progress. 
+o	Debug the stunnel performance dip in eagle when compare to xeon
+(performance dip is seen with simple iperf too) 
+o	Collected performance numbers with 3des, iperf, rsa and sha
+operation in s/w for various thread combinations on Xeon and Eagle.
+Considering the power dissipation, looks like 2 Eagle nodes at 1.6Ghz will
+be able to match or exceed 4 Core(8 cpus) Sandybridge Xeon (E5-2643) at
+3.3 Ghz. 
+*	OVS:
+o	Will be requesting 6Wind to do a OVS port to XLP. 
+*	NAE-DPI Application (Marketing request): 
+o	The apps team has been provided with anti-virus and url-filtering
+database and targeted traffic for those databases.
+o	The apps team is currently collecting statistics on the supplied
+databases using the integrated demo
+o	Having daily sync-up calls with Marketing and Apps.
+o	Currently working on a few changes suggested by Apps/Marketing to
+the app ( Name changes and output changes). Nothing fundamental.
+*	Out of Box: (05/10) 
+o	Demo to Marketing on 07/23.
+*	XLP-XGS Integration:
+o	Added infrastructure to support multiple tx and rx rings in
+userspace applications
+o	Added support to map cosq to rx ring.
+o	Ported all changes to linux-3.7 (qaq23). Faced some issues when
+application and kernel driver uses FMN simultaneously. Modified switch sdk
+test application to use fast syscall to avoid this problem for now. Will
+need to modify COP2 save and restore feature in 3.7 kernel
+o	Provided performance data and code changes to the Switch SW team.
+*	Linaro:  
+o	Internal sync ups on LCE13.
+o	RNG API discussions.
+o	Start looking at OVS.
+o	LEG: Linaro has identified a set of packages to be optimized, with
+varying priorities. Work on identifying and optimizing a package.
+
+Staffing: 
+*	BLR 1 (via Switch team): Two interviews: Both rejected.
+*	BLR 2: (Replacement req):  Receiving and screening resumes.
+*	Trainee-hiring: Interviewed three candidates on telephone and
+selected Ujjal Dutta to replace Naveen.
+
+Issues:
+o	We need more Griffin boards to make faster progress.
+o	KBP driver in our SDK: We have not been validating this
+functionality, although this is being shipped along with our SDK. There is
+a customer need for this. Will need to come up with a solution..
+
+From:	Praveen B
+Sent:	Monday, July 22, 2013 8:28 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 07/15/2013 to 07/19/2013
+
+Hi Kumaravel,
+
+ 
+
+                Last week:
+
+                                Worked on sdk-base
+
+.         Added dpi in linux-userspace
+
+.         Tested building sdk-base for all possible board types in LE and
+BE modes 
+
+.         Tested dpi applications  on firefly and griffin 
+
+And 
+
+                                       Enabling code base based on engines
+supported by target board
+
+        
+
+                                                
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, July 15, 2013 7:47 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 07/8/2013 to 07/13/2013
+
+HI Kumaravel,
+
+ 
+
+                Worked on sdk-base
+
+                                Added DPI libraries and source files to
+linux-userspace
+
+                                Modified Make files to build dpi libraries
+and dpi apps
+
+                                Made DPI libraries and dpi apps to build
+independently  (will not depend on hyperexec build)
+
+  
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, July 08, 2013 8:59 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 07/1/2013 to 07/6/2013
+
+Hi Kumaravel,
+
+ 
+
+                Last week: 
+
+                                Worked on sdk-base
+
+1.       Moving dpi related files to linux-userspace directory (as
+hyperexec directory going to be delete)
+
+2.       Making an independent dpi directory in linux userspace (for dpi
+demos )
+
+Removing dependency form other files and making this dpi as independent   
+
+ 
+
+Misc: 2 days PTO (Monday & Tuesday)
+
+                
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Friday, June 28, 2013 5:54 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 06/24/2013 to 06/28/2013
+
+Hi Kumaravel,
+
+ 
+
+                Last week:
+
+                       Worked on default case for alternation
+
+Added support for this default alternation case and worked on some
+examples
+
+Modified http grammar file to support regex rules
+
+Tested Modified http grammar which support regex rules on firefly board
+and checked performance numbers
+
+Updated compiler libraries on sdk-base and added this http_req_res_regex
+grammar to sdk-base
+
+ 
+
+ 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Thursday, June 27, 2013 2:52 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	perforamnce numberd for htto_grammar with default path (regex )
+Attachments:	performance_numbers.txt; http_1.txt; http_2.txt; pkt-match-3551.txt
+
+Hi Kumaravel,
+
+ 
+
+                I have tested this modified http grammar on board
+
+I have attached performance number file
+
+Also grammar files and traffic file
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Wednesday, June 26, 2013 10:08 AM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	code review for Default Or
+Attachments:	test1.dsl; http_grammar_with_default_or.txt
+
+Hi Kumaravel,
+
+ 
+
+                                Added support to work Default Or case 
+
+                                                And added default or (some
+dummy grammar ) to http grammar and verified 
+
+                                
+
+The code changes are present in this link so please review this code
+changes
+
+ 
+
+http://10.131.60.155/code_reviews/praveenb/default_or/
+
+ 
+
+Attached sample dsl with default or case and modified http grammar with
+default or case
+
+ 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Tuesday, June 25, 2013 11:03 AM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	modified http grammar with defalut OR case
+Attachments:	http_grammar_mod2.txt
+
+Hi Kumaravel,
+
+ 
+
+                I have modified http grammar by adding default Or case to
+it and tested with V3 working fine
+
+ 
+
+Please check the attached grammar file
+
+                
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, June 24, 2013 7:10 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 06/17/2013 to 06/22/2013
+
+Hi Kumaravel,
+
+ 
+
+                Last week:
+
+                                Worked on default case for OR
+
+                                                Added support for this
+default Or case and working on some examples
+
+                                                Checking with different
+possible cases
+
+                                               Also checking this default
+Or case with http grammar.
+
+ 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, June 17, 2013 7:41 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 06/10/2013 to 06/16/2013
+
+Hi Kumaravel,
+
+ 
+
+last week:
+
+o   Fixed jira issue (EPSW-799
+<http://engjira.sj.broadcom.com/browse/EPSW-799> )  to optimize grammar
+instructions 
+
+     if  field  is  quantified with variable or fixed quantifier and that
+filed consist only one character 
+
+    then it has to use match count instruction instead of stack push and
+loopnz
+
+ 
+
+o    Fixed jira issue EPSW-798
+<http://engjira.sj.broadcom.com/browse/EPSW-798>  to mark ambiguous
+grammar if  filed not disambiguated and a variable quantified field
+presents 
+
+ 
+
+o   Fixed one more issue if more than 8 fixed quantifiers used for tokens
+compiler generating stack and loopnz instruction 
+
+Modified this to use unroll count 
+
+ 
+
+                Sent these code changes for review 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, June 10, 2013 5:40 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 06/3/2013 to 06/8/2013
+
+Hi Kumaravel,
+
+ 
+
+last week:
+
+o   Worked on jira issue (EPSW-799
+<http://engjira.sj.broadcom.com/browse/EPSW-799> )  to optimize grammar
+instructions 
+
+     if a field and it is  quantified with variable quantifier and that
+filed consist only one character 
+
+    then it has to use match count instruction instead of stack push and
+loopnz
+
+ 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, June 03, 2013 7:31 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 05/27/2013 to 05/31/2013
+
+Hi Kumaravel,
+
+ 
+
+                Last week:
+
+o   Worked on  jira issue EPSW-579
+<http://engjira.sj.broadcom.com/browse/EPSW-579>  
+
+     A field and its subfield both are quantified, then the grammar should
+be reported as ambiguous
+
+.         Fixed this issue for  all possible conditions and sent for code
+review
+
+.         Written test cases which gives this type of ambiguous grammar
+(80- positive and  90 -negative tests)
+
+o   Worked on http grammar which is giving less through put value and
+found reason
+
+.         One filed has variable quantifier and the filed has a terminal
+so it is generating the variable count number of instructions
+
+ 
+
+This week:
+
+o   Working on grammar_nfa to optimize grammar instructions 
+
+     Grammar consists a field and it is  quantified with variable
+quantifier and that filed consist only one character
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, May 27, 2013 7:09 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 05/20/2013 to 05/26/2013
+
+Hi Kumaravel,
+
+ 
+
+                Last week:
+
+                                working on jira issue EPSW-579
+<http://engjira.sj.broadcom.com/browse/EPSW-579>  
+
+     A field and its subfield both are quantified, then the grammar should
+be reported as ambiguous
+
+.         Fixing this issue for  all possible conditions 
+
+.         Writing test cases which give this type of ambiguous grammar
+
+ 
+
+                                Jira issue EPSW-578
+<http://engjira.sj.broadcom.com/browse/EPSW-578> 
+
+                                                If a field is not
+disambiguated and then a case statement present that should me marked as
+ambiguous 
+
+                                                
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, May 20, 2013 7:00 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 05/13/2013 to 05/19/2013
+
+Hi Kumaravel,
+
+ 
+
+                Last week:
+
+                                working on jira issue EPSW-579
+<http://engjira.sj.broadcom.com/browse/EPSW-579>  (A field and its
+subfield both are quantified, then the grammar should be reported as
+ambiguous.)
+
+                                               Understanding grammar nfa
+and finding some more cases which give ambiguous grammar
+
+ 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, May 13, 2013 7:14 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 05/06/2013 to 05/12/2013
+
+Hi Kumaravel,
+
+ 
+
+                Last week:
+
+                                1.Worked on jira issue EPSW-531
+<http://engjira.sj.broadcom.com/browse/EPSW-531>  (Compilation of 300k
+grammar rules leading to segmentation fault) 
+
+                                                Reached max token limit so
+one error message required.
+
+                                2. working on jira issue EPSW-579
+<http://engjira.sj.broadcom.com/browse/EPSW-579>  (A field has only one
+subfield and both fields are quantified, then the grammar should be
+reported as ambiguous.)
+
+                                               Understanding grammar nfa
+to solve this issue.
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, May 06, 2013 7:34 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 04/29/2013 to 05/5/2013
+
+Hi Kumaravel,
+
+ 
+
+                Last week:
+
+                                1.Fixed one  jira issue  EPSW-440
+<http://engjira.sj.broadcom.com/browse/EPSW-440>   (Rule having start
+anchor or end anchor in in the middle of the string should be invalid
+rule)
+
+                                2.Added  dsl to check start anchor and end
+anchor rules
+
+                                3.Added negative test cases(8 grammars )
+to check this start anchor and end anchor issue
+
+                                4.Working on jira issue EPSW-531
+<http://engjira.sj.broadcom.com/browse/EPSW-531>  (Compilation of 300k
+grammar rules leading to segmentation fault) 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, April 29, 2013 6:57 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 04/15/2013 to 04/21/2013
+
+Hi Kumaravel,
+
+ 
+
+                Last week:
+
+                                Fixed one issue Jira EPSW-635
+<http://engjira.sj.broadcom.com/browse/EPSW-635>   (v3 throwing invalid
+rule group id for multiple grammars with bsd rules in single dsl )
+
+                                And working on jira issue  EPSW-440
+<http://engjira.sj.broadcom.com/browse/EPSW-440>   (Rule having start
+anchor and end anchor in in the middle of the string should be invalid
+rule)
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Wednesday, April 24, 2013 7:42 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 4/24/13
+
+Hi Kumaravel,
+
+ 
+
+                Today  worked on one jira issue  EPSW-440
+<http://engjira.sj.broadcom.com/browse/EPSW-440>   (Rule having start
+anchor and end anchor in in the middle of the string should be invalid
+rule)
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Tuesday, April 23, 2013 3:41 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 04/15/2013 to 04/21/2013
+
+Hi Kumaravel,
+
+ 
+
+                Last week:
+
+Worked on one issue Jira EPSW-635
+<http://engjira.sj.broadcom.com/browse/EPSW-635>   (v3 throwing invalid
+rule group id for multiple grammars with bsd rules in single dsl )
+
+Misc: 1 day PTO (Monday)
+
+ 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, April 22, 2013 6:45 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 04/15/2013 to 04/21/2013
+
+Hi Kumaravel,
+
+ 
+
+                Last week:
+
+Worked on one issue (v3 throwing invalid rule group id for multiple
+grammars with bsd rules in single dsl )
+
+Misc: 1 day PTO (Monday)
+
+ 
+
+ 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, April 15, 2013 6:03 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenb week 04/08/2013 to 04/14/2013
+
+Hi Kumaravel,
+
+ 
+
+                Last week: 
+
+worked on one issue which gives invalid rule group id if multiple grammars
+with bsd rules in single dsl
+
+changed the path for regular app install directory for LE mode
+
+      Misc: 1 day PTO (Friday)
+
+ 
+
+Thanks,
+
+PraveenB
+
+From:	Praveen B
+Sent:	Monday, April 08, 2013 5:37 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveen week 04/01/2013 to 04/06/2013
+
+Hi Kumaravel,
+
+ 
+
+                Last week:
+
+                                Analyzed  the performance difference
+between hyperexec demos and regular linux demos
+
+Added multiple input file support and repeat option to the pcap demo
+
+ 
+
+                This week:
+
+                                Working on one  issue (when multiple
+grammars with bsd rules in single dsl throwing Invalid group ID )
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Wednesday, April 03, 2013 6:42 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 4/3/2013
+
+Hi Kumaravel,
+
+ 
+
+                Today I have worked on
+
+                                Changing the pcap demo to support multiple
+input file support and repeat option
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Tuesday, April 02, 2013 6:49 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 4/2/2013
+
+Hi Kumaravel,
+
+ 
+
+                Today I worked on
+
+                                Changing the pcap demo to support multiple
+input file and repeat option
+
+                                Analyzing  the performance difference
+between hyperexec demos and regular linux demos
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, April 01, 2013 4:56 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveen week 03/25/2013 to 03/31/2013
+
+Hi Kumaravel,
+
+ 
+
+                Last week:
+
+                                Written test cases for BSD ,
+
+                                Generated some random BSD test cases ,
+
+                                base64 to transducer offset issue ,
+
+                                and working on one more issue (multiple
+-grammars with BSD rules in a single file giving invalid-rule-group-id)
+
+ 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Tuesday, March 26, 2013 6:44 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report 3/26/2013
+
+Hi Kumaravel,
+
+ 
+
+                Today 
+
+                                I worked on BSD tests
+
+                                                Generating BSD tests
+randomly using different string lengths and different number of rules
+
+                                And base64 to transducer offset issue
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, March 25, 2013 6:03 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveen week 03/18/2013 to 03/23/2013
+
+Hi Kumaravel,
+
+ 
+
+                Last week I worked on
+
+                                Base64-to-transducer offset issue in model
+
+                                And Writing BSD tests
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Tuesday, March 19, 2013 6:45 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report 3/19/2013
+
+Hi Kumaravel,
+
+ 
+
+                Today I worked on
+
+ 
+
+                -base64 to transducer offset issue
+
+                -modifying demo pcap to support repeat option and multiple
+input file
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, March 18, 2013 6:27 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveen week 03/11/2013 to 03/17/2013
+
+Hi Kumaravel,
+
+                
+
+               Last week:
+
+                          Written scripts for griffin test plan
+
+1.Script to  run performance tests
+
+       2.Script to make tar files for  regex files
+
+       3.Script to run regex tests on board
+
+working on base64_to_transducer_offset issue
+
+ 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, March 11, 2013 5:24 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveen week 03/04/2013 to 03/10/2013
+
+Hi Kumaravel,
+
+ 
+
+                Last week:
+
+                                Written scripts for griffin test plan
+
+1.Script to  run performance tests
+
+       2.Script to make tar files for  regex files
+
+       3.Script to run regex tests on board
+
+ 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Friday, March 08, 2013 8:17 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 3/8/2013
+
+Hi Kumaravel,
+
+ 
+
+Today I have worked on script for griffin test plan
+
+                                -script to make tar files for regex tests
+and running on firefly board
+
+ 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Thursday, March 07, 2013 6:35 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 3/7/13
+
+Hi Kumaravel,
+
+                                
+
+                Today I have worked on script for griffin test plan
+
+                                -script to make tar files for regex tests
+and running on firefly board
+
+ 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Tuesday, March 05, 2013 8:16 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 3/5/13
+
+Hi Kumaravel,
+
+ 
+
+                Today I have worked on script for griffin test plan
+
+                                -script to make tar files for regex tests
+and running on storm board
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, March 04, 2013 2:29 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report for praveen week 25/02/2013 to 03/01/2013
+
+Hi Kumaravel,
+
+ 
+
+Worked on grammar tests for griffin
+
+  Writing scripts for griffin test plan
+
+                Script to run regex tests
+
+               Script to run pcap files
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Wednesday, February 27, 2013 6:49 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 2/27/13
+
+Hi Kumaravel,
+
+ 
+
+                Today Worked on grammar tests for griffin
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Tuesday, February 26, 2013 7:02 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 2/26/13
+
+Hi Kumaravel,
+
+ 
+
+                Worked on grammar tests for griffin 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, February 25, 2013 10:24 AM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveen week 02/18/2013 to 2/22/2013
+
+Hi Kumaravel,
+
+ 
+
+                Worked on random grammar generation
+
+-          Added base64 feature to random grammar generator
+
+                Working on grammar tests for griffin 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Thursday, February 21, 2013 7:09 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 2/21/13
+
+Hi Kumaravel,
+
+ 
+
+                Worked on random grammar generator
+
+-          Added base64 feature to random grammar generator
+
+-          Debugged some failed grammars generated from random grammar
+generator 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Wednesday, February 20, 2013 7:09 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 2/19/13 and 2/20/13
+
+Hi Kumaravel,
+
+ 
+
+                Worked on random grammar generation
+
+-          Adding base64 feature to random grammar generator 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Friday, February 15, 2013 5:11 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report for praveen (2/11/13 to 2/15/13)
+
+Hi Kumaravel
+
+ 
+
+                This week I worked on random grammar generator
+
+                                - Debugged the some failed random grammar
+files
+
+                                - Adding base64 blocks to random grammar
+generator
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Tuesday, February 12, 2013 7:15 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 2/12/13
+
+Hi Kumaravel,
+
+                
+
+                Debug the some failed random grammar tests generated by
+Siva
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, February 11, 2013 2:03 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for praveenB week (2/04/13 - 2/11/13)
+
+Hi Kumaravel,
+
+Last week worked on
+
+Test cases for BSD and
+
+Random Grammar generation
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Thursday, February 07, 2013 7:15 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 7/2/13
+
+Hi Kumaravel,
+
+ 
+
+                                Understanding the random grammar generator
+program
+
+Understand 
+
+1.    How the blocks are created ,
+
+2         How the blocks are named
+
+3         And how the blocks are recursively split 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, February 04, 2013 9:50 AM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	Status report for Week 28-1-13 to 1-2-13
+
+Hi Kumaravel,
+
+ 
+
+                Last week worked on test cases for BSD 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Tuesday, January 29, 2013 6:45 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 29-1-13
+
+Hi Kumaravel,
+
+                
+
+                Today I have written some test cases for BSD
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, January 28, 2013 6:56 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 28-1-13
+
+Hi Kumaravel,
+
+ 
+
+                Today I have worked on grammar files to check bsd 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Thursday, January 24, 2013 7:16 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 24-1-13
+
+Hi Kumaravel,
+
+                
+
+                Today I have worked on Random normalizer program
+
+                                --fixed some memory leakages in program
+and handed over to Siva  
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Wednesday, January 23, 2013 7:58 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 23-1-13
+
+Hi Kumaravel,
+
+ 
+
+                Today I have worked on Random normalizer program
+
+                                Modified the program according to Siva's
+requirements
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Tuesday, January 22, 2013 7:55 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 22-1-13
+
+Hi Kumaravel,
+
+ 
+
+                Today I have worked on random normalizer program
+
+                                Modifying the program according to Siva
+requirements
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Thursday, January 17, 2013 6:39 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 17-1-13
+
+Hi Kumaravel,
+
+ 
+
+                Today I have worked on random grammar generation program 
+
+                And attended training classes 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Wednesday, January 16, 2013 6:36 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 16-1-13
+
+Hi Kumaravel,
+
+                
+
+                Today I worked on random normalizer program then random
+input traffic generation program.
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Tuesday, January 15, 2013 6:35 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 15-1-13
+
+Hi Kumaravel,
+
+                
+
+                Today I have worked on random normalizer generation
+program
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, January 14, 2013 6:29 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 1-14-13
+
+Hi Kumaravel,
+
+                
+
+                Today I have worked on random normalization generation
+program
+
+                
+
+                Output is stored in one text file .i have attached that
+text file
+
+                
+
+                C Program file is in this location
+
+                /proj/magnum/praveenb/p4/L7/bld/verifier/
+randomn_check_new.c
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Friday, January 11, 2013 6:15 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 11-1-13
+
+Hi Kumaravel,
+
+                
+
+                Today I have worked on Random Normalizer generator program
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Tuesday, January 08, 2013 6:37 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report (1-8-12)
+Attachments:	rnorm.c
+
+Hi Kumaravel,
+
+ 
+
+                Today I worked on random grammar normalizer program
+
+                I have added 6 transducer programs to it
+
+Also I have attached the c program file.
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Friday, January 04, 2013 7:56 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report 1-4-13
+
+Hi Kumaravel,
+
+                
+
+                Today I worked on random normalizer program
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Thursday, January 03, 2013 6:57 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report (1-3-2013)
+
+Hi Kumaravel,
+
+ 
+
+                Today I worked on random normalizer program
+
+                And attended training sessions 
+
+                                Morning session was just about
+introduction
+
+                                Evening session is on git 
+
+                                In this I learnt about
+
+                                                -git clone  -- clones the
+data from remote server to local 
+
+                                                -git branch - create new
+branch
+
+                                                -git merge  -- merge will
+make it the commit to form like a branch
+
+                                                -git rebase - rebase will
+make it like linear structure
+
+                                                -git update -update the
+new branches 
+
+                                                -git pull - update the
+current branch too
+
+                                                -git push  -- to push the
+commits 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Tuesday, January 01, 2013 5:59 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report (1-1-13)
+Attachments:	rnorm.c
+
+Hi Kumaravel,
+
+                
+
+                Today I worked on random normalizer program
+
+                For this program I have written 6 transducer programs
+
+1.       converting one character to its next character  eg : a --> b , c
+- ->d
+
+2.       converting three consecutive  character to single character eg:
+ccc --> c
+
+3.       change lower case to upper case eg : ab[cd]-->abCD (changes the
+case for  characters which are in side this [ ] )
+
+4.       removes the duplicates eg  cccccc-->c
+
+5.       prints the next character for every character in whole string eg
+: abcd --> bcde
+
+6.       changes the integers to string format eg: 1-->one
+
+also
+
+I have attached the c file which consists the random normalizer program
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, December 31, 2012 5:57 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report (31-12-12)
+
+Hi Kumaravel,
+
+ 
+
+               Today first I worked on grammar dsl files
+
+                                Then started working on random normalizer
+program
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Friday, December 28, 2012 6:03 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report (28-12-12)
+Attachments:	New.txt
+
+Hi Kumaravel,
+
+                Today I worked on grammar
+
+                                Read about uri_normalization
+
+                                And transducers 
+
+And I have attached a dsl file which consists dsl grammar fiels
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Thursday, December 27, 2012 6:09 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report (27-12-12)
+Attachments:	New.txt
+
+Hi Kumaravel,
+
+                
+
+                Today I worked on GRAMMAR
+
+                                Learnt about transducers
+
+                                Learnt the usage of base64 and scope rules
+
+                                Written some grammar dsl files using
+transducers , base64-decode and scope rules
+
+ 
+
+Also I have attached the DSL file which has grammar dsl files
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Wednesday, December 26, 2012 6:09 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report (26-12-12)
+Attachments:	New.txt
+
+Hi Kumaravel,
+
+ 
+
+                Today I worked on GRAMMAR 
+
+                                Learnt usage of "on-err-goto " statement
+
+                                Practiced and written some grammar DSL
+fiels
+
+                                Practiced Grammar dsl files with all
+quantifiers ,all variables and consts  and  "on-err-goto" statement 
+
+                                Learnt usage of "Integer_unit.readval "
+and "transducer active"
+
+ 
+
+Also I have attached a file which consists grammar dsls 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Monday, December 24, 2012 6:39 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report(25-12-12)
+Attachments:	New.txt
+
+Hi Kumaravel,
+
+ 
+
+Today I worked on grammar ,
+
+I have written some dsl files with grammar and verified using v3 ,
+
+And I have attached that dsl file.
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Friday, December 21, 2012 6:08 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report (21-12-12)
+
+Hi Kumaravel,
+
+                
+
+                                Today I worked on grammar and
+
+                                I have practiced and written some DSL with
+grammar and verified using V3
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Thursday, December 20, 2012 6:55 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report (20-12-2012)
+
+Hi Kumaravel,
+
+ 
+
+Today I continued reading the grammar document and
+
+                Understanding about the grammar rules by observing the
+existing grammar files 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Wednesday, December 19, 2012 6:54 PM
+To:	Kumar (Kumaravel) Kanda Senniappan
+Subject:	status report (19-12-12)
+
+Hi Kumaravel,
+
+ 
+
+Today I worked same demo on storm board
+
+Then started reading introduction to grammar document 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
+From:	Praveen B
+Sent:	Thursday, December 13, 2012 4:01 PM
+To:	Mahendra Ladhe
+Subject:	Status Report
+
+Hi Mahendra,
+
+ 
+
+My status report from joining date(19-11-12) to today (13-12-12)
+
+ 
+
+                -Learnt Unix basic commands and about VI editor
+
+                -Learnt Perl scripting and practiced some scripts
+
+                -Learnt and worked on Regular expressions
+
+                -Learn writing DSL files and written some DSL files
+
+                -written c function bad rule analyzer program to find
+rules which gives good throughput when they removed .
+
+                -Read about Perforce and GIT 
+
+ 
+
+Thanks,
+
+Praveen B
+
+ 
+
